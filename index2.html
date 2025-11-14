@@ -570,32 +570,45 @@
 </div>
 
 <script>
-  // ۱۵ کلمه اصلی که از آن‌ها مراحل بازی ساخته خواهد شد
-  const words = [
-    "هوش مصنوعی", "تولید محتوا", "مهربانی", "دوستانه", "صداقت", 
-    "شکوفایی", "همدلانه", "فروتنانه", "پیروزمندانه", "شادمانی",
-    "میهمان‌نوازی", "دلاورمردان", "خوش‌بختانه", "انسان‌دوستی", "طاویتا"
+  const TAVITA_IMAGES = {
+    explainFancy: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-16-26-209.png",
+    medal: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-12-570.png",
+    sad: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-14-57-50-229.png",
+    explainSimple: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png",
+    letters: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-13-56-364.png",
+    clap: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-15-32-972.png",
+    proud: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-30-637.png",
+  };
+
+  // کلمات پایه برای ساخت مراحل بازی
+  const baseWords = [
+    "باد", "شیر", "کتاب", "دوست", "باران", "دریا", "مدرسه", "داستان", "دفترچه", "کیفیت",
+    "هوش مصنوعی", "تولید محتوا", "مهربانی", "دوستانه", "صداقت"
   ];
 
-  // تابعی برای ایجاد جواب‌ها از یک کلمه (هر ترکیب ممکن از حروف کلمه اصلی)
+  // تابع برای ایجاد ترکیب‌های ممکن از حروف هر کلمه
   function generateAnswers(word) {
     let answers = [];
     for (let i = 1; i < word.length; i++) {
-      answers.push(word.slice(0, i)); // بخش‌های مختلف کلمه را به عنوان جواب اضافه می‌کند
+      answers.push(word.slice(0, i)); // جواب‌های مختلف را با برش‌های مختلف اضافه می‌کند
     }
     return answers;
   }
 
-  // ساخت سطح‌ها به طور خودکار از کلمات
-  const levels = words.map((word, index) => {
-    return {
-      base: word,
-      answers: generateAnswers(word),
-      needed: 2 + Math.floor(index / 3), // افزایش تعداد جواب‌های مورد نیاز در هر سطح
-    };
-  });
+  // ساخت ۶۰ سطح به‌طور خودکار از کلمات پایه
+  const levels = [];
+  let levelCounter = 0;
 
-  // تنظیمات اولیه
+  for (let i = 0; i < 60; i++) {
+    const word = baseWords[i % baseWords.length];  // اگر تعداد کلمات پایه کمتر از ۶۰ بود، آن‌ها تکرار می‌شوند
+    const answers = generateAnswers(word);
+    levels.push({
+      base: word,
+      answers: answers,
+      needed: Math.min(2 + Math.floor(i / 4), answers.length),  // مرحله‌بندی آسان‌تر در مراحل اولیه
+    });
+  }
+
   const totalLevels = levels.length;
   let currentLevelIndex = 0;
   let foundWords = [];
@@ -630,7 +643,7 @@
     return arr.join("");
   }
 
-  // تابع برای نمایش کلمه اصلی در سطح جاری
+  // نمایش کلمه اصلی برای سطح جاری
   function renderBaseWord() {
     const level = levels[currentLevelIndex];
     baseWordLettersEl.innerHTML = "";
