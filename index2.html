@@ -570,283 +570,236 @@
 </div>
 
 <script>
-// =========================
-//  ۱) تعریف مراحل (۶۰ مرحله)
-// =========================
+  const TAVITA_IMAGES = {
+    explainFancy: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-16-26-209.png",
+    medal: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-12-570.png",
+    sad: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-14-57-50-229.png",
+    explainSimple: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png",
+    letters: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-13-56-364.png",
+    clap: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-15-32-972.png",
+    proud: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-30-637.png",
+  };
 
-const levelTemplates = [
-  {
-    name: "هوش مصنوعی",
-    base: "هوش مصنوعی",
-    easy: ["شوی", "هوس"],
-    medium: ["شیوع", "موش", "عوض"],
-    hard: ["شمع", "ویژه", "صوم", "عشق"],
-    expert: ["شعور", "موضوع", "صعود", "هوش مصنوعی", "هیچ", "شوق"],
-    needed: 3
-  },
-  {
-    name: "تولید محتوا",
-    base: "تولید محتوا",
-    easy: ["تاو", "دوا"],
-    medium: ["تولد", "حدود", "داوت"],
-    hard: ["محدود", "دوتایی", "تحویل", "داوود"],
-    expert: ["محدودیت", "تحمیل", "محتاط", "اولویت", "تولید محتوا", "احتیاط"],
-    needed: 3
-  },
-  {
-    name: "مهربانی",
-    base: "مهربانی",
-    easy: ["بار", "نام"],
-    medium: ["بهار", "مانی", "رهبر"],
-    hard: ["مهربان", "بهانه", "میهمان", "نهایی"],
-    expert: ["بهره‌مند", "مهمانی", "رهبری", "بهینه", "مهربانی", "بیمار"],
-    needed: 3
-  },
-  {
-    name: "دوستانه",
-    base: "دوستانه",
-    easy: ["دست", "نود"],
-    medium: ["دانه", "ستون", "سوته"],
-    hard: ["دستان", "دوستان", "ستاده", "نواده"],
-    expert: ["داستان", "نوستان", "دوستانه", "استوانه", "دوسه", "نوسانات"],
-    needed: 3
-  },
-  {
-    name: "صداقت",
-    base: "صداقت",
-    easy: ["صد", "دقت"],
-    medium: ["صدا", "قات", "تصدق"],
-    hard: ["صادق", "اقتصاد", "تصادف", "قصد"],
-    expert: ["صدق", "صداقت", "تصدیق", "اعتقاد", "قاصد", "تصاعد"],
-    needed: 3
-  },
-  // ... مراحل دیگر تا 60
-];
+  const levels = [
+    { base: "باد",     answers: ["باد", "بد", "دا"],              needed: 2 },
+    { base: "شیر",     answers: ["شیر", "ریش", "ری", "یر"],       needed: 2 },
+    { base: "کتاب",    answers: ["کتاب", "تاب", "باک", "کت"],     needed: 3 },
+    { base: "دوست",    answers: ["دوست", "دوس", "سود", "دوت"],    needed: 3 },
+    { base: "باران",   answers: ["باران", "بار", "ران", "بر"],    needed: 3 },
+    { base: "دریا",    answers: ["دریا", "یار", "دیر", "راید"],   needed: 3 },
+    { base: "مدرسه",   answers: ["مدرسه", "درس", "رسم", "مرد"],   needed: 4 },
+    { base: "داستان",  answers: ["داستان", "داست", "سان", "دان"], needed: 4 },
+    { base: "دفترچه",  answers: ["دفترچه", "دفتر", "چفت", "رفت"], needed: 3 },
+    { base: "کیفیت",   answers: ["کیفیت", "کیف", "فیت", "فیک"],   needed: 3 },
+  ];
 
-// =========================
-//  ۲) المنت‌ها و وضعیت بازی
-// =========================
+  const totalLevels = levels.length;
 
-let currentLevelIndex = 0;
-let foundWords = [];
-let score = 0;
-let gameFinished = false;
+  let currentLevelIndex = 0;
+  let foundWords = [];
+  let score = 0;
 
-const levelNumberEl = document.getElementById("levelNumber");
-const totalLevelsEl = document.getElementById("totalLevels");
-const scoreTextEl = document.getElementById("scoreText");
-const baseWordLettersEl = document.getElementById("baseWordLetters");
-const levelGoalEl = document.getElementById("levelGoal");
-const foundListEl = document.getElementById("foundList");
-const foundCountEl = document.getElementById("foundCount");
-const neededCountEl = document.getElementById("neededCount");
-const statusTextEl = document.getElementById("statusText");
-const wordInputEl = document.getElementById("wordInput");
-const checkBtn = document.getElementById("checkBtn");
-const shuffleBtn = document.getElementById("shuffleBtn");
-const nextBtn = document.getElementById("nextBtn");
+  const scoreTextEl     = document.getElementById("scoreText");
+  const levelNumberEl   = document.getElementById("levelNumber");
+  const totalLevelsEl   = document.getElementById("totalLevels");
+  const baseWordLettersEl = document.getElementById("baseWordLetters");
+  const levelGoalEl     = document.getElementById("levelGoal");
+  const statusTextEl    = document.getElementById("statusText");
+  const wordInputEl     = document.getElementById("wordInput");
+  const checkBtn        = document.getElementById("checkBtn");
+  const shuffleBtn      = document.getElementById("shuffleBtn");
+  const nextBtn         = document.getElementById("nextBtn");
+  const foundListEl     = document.getElementById("foundList");
+  const foundCountEl    = document.getElementById("foundCount");
+  const neededCountEl   = document.getElementById("neededCount");
+  const tavitaImgEl     = document.getElementById("tavitaImage");
+  const tavitaTextEl    = document.getElementById("tavitaText");
+  const rankTextEl      = document.getElementById("rankText");
 
-// =========================
-//  ۳) تصاویر طاویتا
-// =========================
+  totalLevelsEl.textContent = totalLevels.toString();
 
-const TAVITA_IMAGES = {
-  explain: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-16-26-209.png",
-  medal: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-12-570.png",
-  sad: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-14-57-50-229.png",
-  simple: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png",
-  shuffle: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-13-56-364.png",
-  clap: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-15-32-972.png",
-  proud: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-30-637.png",
-};
-
-// =========================
-//  ۴) کاراکترهای مراحل
-// =========================
-
-const CHARACTER_IMAGES = {
-  novice: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-57-40-095.png",
-  expert: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-58-08-424.png",
-  master: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-58-47-930.png",
-  legend: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-59-31-841.png",
-  champion: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-18-00-12-353.png"
-};
-
-// =========================
-//  ۵) تنظیمات طاویتا
-// =========================
-
-function setTavita(mode, text) {
-  const tavitaImg = document.getElementById("tavitaImage");
-  const tavitaBubble = document.getElementById("tavitaText");
-
-  switch (mode) {
-    case "start":
-      tavitaImg.src = CHARACTER_IMAGES.novice;
-      tavitaBubble.textContent = text || "خوش آمدید به بازی! شما اکنون شاگرد کلمات طاویتا هستید.";
-      break;
-    case "expert":
-      tavitaImg.src = CHARACTER_IMAGES.expert;
-      tavitaBubble.textContent = text || "تبریک! حالا استاد کلمات طاویتا شدی!";
-      break;
-    case "master":
-      tavitaImg.src = CHARACTER_IMAGES.master;
-      tavitaBubble.textContent = text || "آفرین! استاد بزرگ کلمات طاویتا شدی!";
-      break;
-    case "legend":
-      tavitaImg.src = CHARACTER_IMAGES.legend;
-      tavitaBubble.textContent = text || "تو استاد افسانه‌ای کلمات طاویتا شدی!";
-      break;
-    case "champion":
-      tavitaImg.src = CHARACTER_IMAGES.champion;
-      tavitaBubble.textContent = text || "تبریک! تو قهرمان بازی کلمات طاویتا شدی! اسکرین‌شات بگیر و بفرست.";
-      break;
-    default:
-      tavitaImg.src = "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png";
-      tavitaBubble.textContent = text || "";
-  }
-}
-
-// =========================
-//  ۶) توابع کمکی
-// =========================
-
-function shuffleString(str) {
-  const arr = str.split("");
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr.join("");
-}
-
-function renderBaseWord() {
-  const level = levelTemplates[currentLevelIndex];
-  baseWordLettersEl.innerHTML = "";
-  const shuffled = shuffleString(level.base);
-  shuffled.split("").forEach((ch) => {
-    const span = document.createElement("span");
-    span.className = "letter-chip";
-    span.textContent = ch;
-    baseWordLettersEl.appendChild(span);
-  });
-}
-
-function renderFoundWords() {
-  foundListEl.innerHTML = "";
-  foundWords.forEach((w) => {
-    const span = document.createElement("span");
-    span.className = "found-item";
-    span.textContent = w;
-    foundListEl.appendChild(span);
-  });
-  foundCountEl.textContent = foundWords.length.toString();
-}
-
-function setStatus(msg, type) {
-  statusTextEl.textContent = msg || "";
-  statusTextEl.classList.remove("ok", "err");
-  if (type === "ok") statusTextEl.classList.add("ok");
-  if (type === "err") statusTextEl.classList.add("err");
-
-  statusTextEl.classList.add("shake");
-  setTimeout(() => statusTextEl.classList.remove("shake"), 300);
-}
-
-function initLevel() {
-  const level = levelTemplates[currentLevelIndex];
-  levelNumberEl.textContent = (currentLevelIndex + 1).toString();
-  scoreTextEl.textContent = score.toString();
-  neededCountEl.textContent = level.needed.toString();
-  foundWords = [];
-  renderFoundWords();
-  renderBaseWord();
-  levelGoalEl.innerHTML = `باید حداقل <b>${level.needed}</b> کلمهٔ درست پیدا کنی.`;
-  setStatus("کلماتت را یکی‌یکی وارد کن و ثبت کن.", "");
-  wordInputEl.value = "";
-  wordInputEl.focus();
-  nextBtn.disabled = true;
-  setTavita("start", `مرحلهٔ ${currentLevelIndex + 1} شروع شد؛ ببین از این کلمه چندتا کلمه درمیاری ✨`);
-}
-
-function checkWord() {
-  const level = levelTemplates[currentLevelIndex];
-  let w = wordInputEl.value.trim();
-  if (!w) {
-    setStatus("اول یک کلمه بنویس.", "err");
-    setTavita("error", "هنوز چیزی ننوشتی؛ یک کلمه امتحان کن 😅");
-    return;
-  }
-  if (w.length < 2) {
-    setStatus("کلمه خیلی کوتاه است؛ حداقل ۲ حرفی باشد.", "err");
-    setTavita("error", "این یکی خیلی کوتاه بود؛ یک کم طولانی‌ترش کن 🤏");
-    return;
-  }
-  if (!canBuildFromBase(level.base, w)) {
-    setStatus("این کلمه را نمی‌توان فقط با حروف کلمهٔ اصلی ساخت.", "err");
-    setTavita("error", "حروفش جور درنمیاد؛ فقط از همین حروف استفاده کن 😉");
-    return;
-  }
-  const allowed = level.answers.map(normalizeWord);
-  if (!allowed.includes(w)) {
-    setStatus("این کلمه جزو جواب‌های این مرحله نیست؛ یکی دیگر امتحان کن.", "err");
-    setTavita("error", "این یکی تو جواب‌های این مرحله نیست؛ دوباره تلاش کن 🤔");
-    return;
-  }
-  if (foundWords.includes(w)) {
-    setStatus("این کلمه را قبلاً ثبت کردی.", "err");
-    setTavita("error", "این رو قبلاً گفتی؛ یک چیز تازه بگو 😊");
-    return;
+  function shuffleString(str) {
+    const arr = str.split("");
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr.join("");
   }
 
-  foundWords.push(w);
-  renderFoundWords();
-  wordInputEl.value = "";
-  wordInputEl.focus();
-  score += 10;
-  scoreTextEl.textContent = score.toString();
-  setStatus("آفرین! یک کلمهٔ جدید پیدا کردی 🌿", "ok");
-  setTavita("correct", "آفرین! یک کلمهٔ تازه به لیست اضافه شد 👏✨");
-
-  if (foundWords.length >= level.needed) {
-    setStatus("عالی! حداقل کلمات لازم را پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
-    nextBtn.disabled = false;
-    setTavita("level", "این مرحله رو ترکوندی! آماده‌ای بریم سراغ بعدی؟ 🏅");
+  function renderBaseWord() {
+    const level = levels[currentLevelIndex];
+    baseWordLettersEl.innerHTML = "";
+    const shuffled = shuffleString(level.base);
+    shuffled.split("").forEach((ch) => {
+      const span = document.createElement("span");
+      span.className = "letter-chip";
+      span.textContent = ch;
+      baseWordLettersEl.appendChild(span);
+    });
   }
-}
 
-checkBtn.addEventListener("click", checkWord);
-
-wordInputEl.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    checkWord();
+  function renderFoundWords() {
+    foundListEl.innerHTML = "";
+    foundWords.forEach((w) => {
+      const chip = document.createElement("span");
+      chip.className = "found-item";
+      chip.textContent = w;
+      foundListEl.appendChild(chip);
+    });
+    foundCountEl.textContent = foundWords.length.toString();
   }
-});
 
-shuffleBtn.addEventListener("click", () => {
-  renderBaseWord();
-  setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
-});
+  function setStatus(msg, type) {
+    statusTextEl.textContent = msg || "";
+    statusTextEl.classList.remove("ok", "err", "shake");
+    if (type === "ok") statusTextEl.classList.add("ok");
+    if (type === "err") {
+      statusTextEl.classList.add("err", "shake");
+      setTimeout(() => statusTextEl.classList.remove("shake"), 250);
+    }
+  }
 
-nextBtn.addEventListener("click", () => {
-  if (currentLevelIndex < levelTemplates.length - 1) {
-    currentLevelIndex++;
-    initLevel();
-  } else {
-    setStatus(
-      "تبریک! همهٔ مراحل فعلی را تمام کردی 🎉 می‌توانی صفحه را رفرش کنی و دوباره بازی کنی.",
-      "ok"
-    );
-    setTavita(
-      "proud",
-      "تو رسماً استاد کلمات طاویتا شدی! هر وقت خواستی از اول شروع کن و رکورد بزن 😎🏆"
-    );
+  function normalizeWord(w) {
+    return w.replace(/\s+/g, "").trim();
+  }
+
+  function updateRankMessage() {
+    const lvl = currentLevelIndex + 1;
+    if (lvl < 5) {
+      rankTextEl.innerHTML =
+        "اگر این چند مرحله را رد کنی، کم‌کم <b>شاگرد کلمات طاویتا</b> می‌شوی 😌";
+    } else if (lvl < 20) {
+      rankTextEl.innerHTML =
+        "اگر همهٔ مراحل فعلی را رد کنی، یک <b>استاد کلمات طاویتا</b> واقعی می‌شوی 😉";
+    } else {
+      rankTextEl.innerHTML =
+        "اینجاها کم‌کم به <b>استاد بزرگ طاویتا</b> نزدیک می‌شوی 🤯🏆";
+    }
+  }
+
+  function setTavita(mode, text) {
+    switch (mode) {
+      case "shuffle": tavitaImgEl.src = TAVITA_IMAGES.letters; break;
+      case "correct": tavitaImgEl.src = TAVITA_IMAGES.clap; break;
+      case "error":   tavitaImgEl.src = TAVITA_IMAGES.sad; break;
+      case "level":   tavitaImgEl.src = TAVITA_IMAGES.medal; break;
+      case "proud":   tavitaImgEl.src = TAVITA_IMAGES.proud; break;
+      default:        tavitaImgEl.src = TAVITA_IMAGES.explainSimple;
+    }
+    if (text) tavitaTextEl.innerHTML = text;
+  }
+
+  function initLevel() {
+    const level = levels[currentLevelIndex];
+    levelNumberEl.textContent = (currentLevelIndex + 1).toString();
+    foundWords = [];
+    renderFoundWords();
+    scoreTextEl.textContent = score.toString();
+    renderBaseWord();
+    neededCountEl.textContent = level.needed.toString();
+    levelGoalEl.innerHTML = `باید حداقل <b>${level.needed}</b> کلمهٔ درست پیدا کنی.`;
+    setStatus("کلماتت را یکی‌یکی وارد کن و ثبت کن.", "");
+    wordInputEl.value = "";
     nextBtn.disabled = true;
+    updateRankMessage();
+    setTavita(
+      "neutral",
+      "این مرحله تازه شروع شده؛ ببینیم از این کلمه چندتا کلمهٔ خفن درمیاری 😎✨"
+    );
   }
-});
 
-initLevel();
+  function canBuildFromBase(base, word) {
+    const baseArr = base.split("");
+    const wordArr = word.split("");
+    const baseCount = {};
+    const wordCount = {};
+    baseArr.forEach((ch) => (baseCount[ch] = (baseCount[ch] || 0) + 1));
+    wordArr.forEach((ch) => (wordCount[ch] = (wordCount[ch] || 0) + 1));
+    for (const ch in wordCount) {
+      if (!baseCount[ch] || wordCount[ch] > baseCount[ch]) return false;
+    }
+    return true;
+  }
+
+  function checkWord() {
+    const level = levels[currentLevelIndex];
+    let w = normalizeWord(wordInputEl.value);
+    if (!w) {
+      setStatus("اول یک کلمه بنویس.", "err");
+      setTavita("error", "هنوز چیزی ننوشتی؛ یک کلمه امتحان کن 😅");
+      return;
+    }
+    if (w.length < 2) {
+      setStatus("کلمه خیلی کوتاه است؛ حداقل ۲ حرفی باشد.", "err");
+      setTavita("error", "این یکی خیلی کوتاه بود؛ یک کم طولانی‌ترش کن 🤏");
+      return;
+    }
+    if (!canBuildFromBase(level.base, w)) {
+      setStatus("این کلمه را نمی‌توان فقط با حروف کلمهٔ اصلی ساخت.", "err");
+      setTavita("error", "حروفش جور درنمیاد؛ فقط از همین حروف استفاده کن 😉");
+      return;
+    }
+    const allowed = level.answers.map(normalizeWord);
+    if (!allowed.includes(w)) {
+      setStatus("این کلمه جزو جواب‌های این مرحله نیست؛ یکی دیگر امتحان کن.", "err");
+      setTavita("error", "این یکی تو جواب‌های این مرحله نیست؛ دوباره تلاش کن 🤔");
+      return;
+    }
+    if (foundWords.includes(w)) {
+      setStatus("این کلمه را قبلاً ثبت کردی.", "err");
+      setTavita("error", "این رو قبلاً گفتی؛ یک چیز تازه بگو 😊");
+      return;
+    }
+
+    foundWords.push(w);
+    renderFoundWords();
+    wordInputEl.value = "";
+    wordInputEl.focus();
+    score += 10;
+    scoreTextEl.textContent = score.toString();
+    setStatus("آفرین! یک کلمهٔ جدید پیدا کردی 🌿", "ok");
+    setTavita("correct", "آفرین! یک کلمهٔ تازه به لیست اضافه شد 👏✨");
+
+    if (foundWords.length >= level.needed) {
+      setStatus("عالی! حداقل کلمات لازم را پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
+      nextBtn.disabled = false;
+      setTavita("level", "این مرحله رو ترکوندی! آماده‌ای بریم سراغ بعدی؟ 🏅");
+    }
+  }
+
+  checkBtn.addEventListener("click", checkWord);
+
+  wordInputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      checkWord();
+    }
+  });
+
+  shuffleBtn.addEventListener("click", () => {
+    renderBaseWord();
+    setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentLevelIndex < levels.length - 1) {
+      currentLevelIndex++;
+      initLevel();
+    } else {
+      setStatus(
+        "تبریک! همهٔ مراحل فعلی را تمام کردی 🎉 می‌توانی صفحه را رفرش کنی و دوباره بازی کنی.",
+        "ok"
+      );
+      setTavita(
+        "proud",
+        "تو رسماً استاد کلمات طاویتا شدی! هر وقت خواستی از اول شروع کن و رکورد بزن 😎🏆"
+      );
+      nextBtn.disabled = true;
+    }
+  });
+
+  initLevel();
 </script>
 </body>
 </html>
