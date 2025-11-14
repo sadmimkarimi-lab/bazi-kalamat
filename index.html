@@ -569,12 +569,7 @@
   </footer>
 </div>
 
-<script>
-  // =========================
-  //  ۱) تعریف مراحل (۶۰ مرحله)
-  // =========================
-
-  // مراحل برای هر سطح بازی
+<script> 
   const levelTemplates = [
     {
       name: "هوش مصنوعی",
@@ -680,47 +675,10 @@
       medium: ["طاو", "تاو", "آیت"],
       hard: ["آیت", "ای", "طوا", "طاو"],
       expert: ["طاویتا", "طاو", "تاو", "آیت", "ای", "آوات"]
-    }
+  
+    },
   ];
 
-  // =========================
-  //  ۲) المنت‌ها و وضعیت بازی
-  // =========================
-  let currentLevelIndex = 0;
-  let foundWords = [];
-  let score = 0;
-  let gameFinished = false;
-
-  const levelNumberEl = document.getElementById("levelNumber");
-  const totalLevelsEl = document.getElementById("totalLevels");
-  const scoreTextEl = document.getElementById("scoreText");
-  const baseWordLettersEl = document.getElementById("baseWordLetters");
-  const levelGoalEl = document.getElementById("levelGoal");
-  const foundListEl = document.getElementById("foundList");
-  const foundCountEl = document.getElementById("foundCount");
-  const neededCountEl = document.getElementById("neededCount");
-  const statusTextEl = document.getElementById("statusText");
-  const wordInputEl = document.getElementById("wordInput");
-  const checkBtn = document.getElementById("checkBtn");
-  const shuffleBtn = document.getElementById("shuffleBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  // =========================
-  //  ۳) تصاویر طاویتا
-  // =========================
-  const TAVITA_IMAGES = {
-    explain: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-16-26-209.png",
-    medal: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-12-570.png",
-    sad: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-14-57-50-229.png",
-    simple: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png",
-    shuffle: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-13-56-364.png",
-    clap: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-15-32-972.png",
-    proud: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-30-637.png",
-  };
-
-  // =========================
-  //  ۴) کاراکترهای مراحل
-  // =========================
   const CHARACTER_IMAGES = {
     novice: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-57-40-095.png",
     expert: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-58-08-424.png",
@@ -729,13 +687,10 @@
     champion: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-18-00-12-353.png"
   };
 
-  // =========================
-  //  ۵) تنظیمات طاویتا
-  // =========================
   function setTavita(mode, text) {
     const tavitaImg = document.getElementById("tavitaImage");
     const tavitaBubble = document.getElementById("tavitaText");
-    
+
     switch (mode) {
       case "start":
         tavitaImg.src = CHARACTER_IMAGES.novice;
@@ -758,14 +713,11 @@
         tavitaBubble.textContent = text || "تبریک! تو قهرمان بازی کلمات طاویتا شدی! اسکرین‌شات بگیر و بفرست.";
         break;
       default:
-        tavitaImg.src = TAVITA_IMAGES.simple;
+        tavitaImg.src = "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png";
         tavitaBubble.textContent = text || "";
     }
   }
 
-  // =========================
-  //  ۶) توابع کمکی
-  // =========================
   function shuffleString(str) {
     const arr = str.split("");
     for (let i = arr.length - 1; i > 0; i--) {
@@ -808,9 +760,6 @@
     setTimeout(() => statusTextEl.classList.remove("shake"), 300);
   }
 
-  // =========================
-  //  ۷) مدیریت مراحل
-  // =========================
   function initLevel() {
     const level = levelTemplates[currentLevelIndex];
 
@@ -834,9 +783,6 @@
     setTavita("start", `مرحلهٔ ${currentLevelIndex + 1} شروع شد؛ ببین از این کلمه چندتا کلمه درمیاری ✨`);
   }
 
-  // =========================
-  //  ۸) چک کردن کلمه
-  // =========================
   function checkWord() {
     const level = levelTemplates[currentLevelIndex];
     let w = normalizeWord(wordInputEl.value);
