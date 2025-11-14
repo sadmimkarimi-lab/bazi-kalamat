@@ -9,8 +9,6 @@
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn/Vazirmatn-font-face.css" rel="stylesheet" />
 
   <style>
-    /* استایل‌های صفحه به همون صورت که قبلا وارد کرده بودید */
-
     :root {
       --purple-main: #8b5cf6;
       --purple-dark: #6d28d9;
@@ -41,6 +39,8 @@
       background: linear-gradient(145deg, #faf5ff, #eef4ff);
     }
 
+    /* HEADER */
+
     .app-header {
       background: linear-gradient(135deg, #8b5cf6, #ec4899);
       color: #fff;
@@ -52,10 +52,332 @@
       box-shadow: 0 14px 30px rgba(109, 40, 217, 0.45);
       border-radius: 0 0 24px 24px;
       position: relative;
+      direction: rtl; /* کل هدر راست‌به‌چپ */
+    }
+
+    .header-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: right;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .header-subtitle {
+      font-size: 11px;
+      opacity: 0.95;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .subtitle-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #bbf7d0;
+      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.45);
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.7; }
+    }
+
+    .header-side {
+      font-size: 11px;
+      opacity: 0.95;
+      line-height: 1.7;
+      text-align: left;
+    }
+    .header-side span { display: block; }
+
+    .logo-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.45);
+      flex-shrink: 0;
+    }
+
+    .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* MAIN */
+
+    .main {
+      flex: 1;
+      padding: 18px 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .game-card {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      padding: 16px 16px 18px;
+      border: 1px solid #e5e7fb;
+      box-shadow: 0 18px 40px rgba(148, 163, 184, 0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .level-pill {
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: #f5f3ff;
+      color: #6d28d9;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .level-pill strong { font-size: 13px; }
+    .score-text b { color: #22c55e; }
+
+    .game-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .game-title span { font-size: 18px; }
+
+    .rule-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    /* ردیف وسط: طاویتا + ستون بازی */
+
+    .middle-row {
+      margin-top: 8px;
+      display: flex;
+      align-items: flex-end; /* کف طاویتا و کادر اصلی هم‌خط */
+      gap: 12px;
+      direction: ltr; /* طاویتا واقعا سمت چپ دیده شود */
+    }
+
+    .middle-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       direction: rtl;
     }
 
-    /* استایل‌های دیگر برای هدر، بدنه، دکمه‌ها و ... */
+    /* کلمات پیدا شده */
+
+    .found-box {
+      border-radius: 18px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .found-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      color: #4b5563;
+    }
+
+    .found-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 24px;
+    }
+
+    .found-item {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #ede9fe;
+      border: 1px solid #ddd6fe;
+      font-size: 11px;
+      color: #4c1d95;
+    }
+
+    /* کلمه اصلی */
+
+    .base-card {
+      padding: 10px 10px 12px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #fdf2ff, #ede9fe);
+      border: 1px solid #e9d5ff;
+    }
+
+    .base-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .shuffle-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      background: #fef3c7;
+      color: #92400e;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(251, 191, 36, 0.35);
+    }
+    .shuffle-btn span.icon { font-size: 13px; }
+
+    .base-letters {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .letter-chip {
+      min-width: 30px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: #7c3aed;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 7px 16px rgba(124, 58, 237, 0.5);
+    }
+
+    .level-goal {
+      font-size: 11px;
+      color: #334155;
+      text-align: center;
+    }
+    .level-goal b { color: #16a34a; }
+
+    .status-text {
+      margin-top: 4px;
+      font-size: 11px;
+      text-align: center;
+      min-height: 18px;
+      color: var(--text-muted);
+    }
+    .status-text.ok { color: #16a34a; }
+    .status-text.err { color: #dc2626; }
+    .shake { animation: shake 0.25s linear; }
+
+    @keyframes shake {
+      25% { transform: translateX(-2px); }
+      50% { transform: translateX(2px); }
+      75% { transform: translateX(-1px); }
+      100% { transform: translateX(0); }
+    }
+
+    /* طاویتا چپ */
+
+    .tavita-wrapper {
+      position: relative;
+      width: 140px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-end; /* پاها می‌آید پایین */
+      padding-bottom: 0;
+    }
+
+    .tavita-img {
+      width: 100%;
+      display: block;
+    }
+
+    .tavita-bubble {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      transform: translateY(-8px);
+      max-width: 220px;
+      background: #ffffff;
+      padding: 8px 10px;
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(148, 163, 184, 0.45);
+      font-size: 11px;
+      color: #111827;
+      direction: rtl;
+      text-align: right;
+    }
+
+    .tavita-bubble::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 18px;
+      border-width: 8px;
+      border-style: solid;
+      border-color: #ffffff transparent transparent transparent;
+    }
+
+    .tavita-bubble b { color: #7c3aed; }
+
+    /* ورودی و دکمه‌ها */
+
+    .word-input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7ff;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #f9fafb;
+      margin-top: 4px;
+    }
+
+    .word-input:focus {
+      outline: none;
+      border-color: #7c3aed;
+      background: #ffffff;
+      box-shadow: 0 0 0 1px #ddd6fe;
+    }
 
     .primary-btn {
       border: none;
@@ -79,11 +401,55 @@
       transform: translateY(1px);
       box-shadow: 0 6px 16px rgba(129, 140, 248, 0.6);
     }
+
+    .primary-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: 0 6px 14px rgba(148, 163, 184, 0.4);
+    }
+
+    .rank-row {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rank-text {
+      font-size: 11px;
+      color: #4b5563;
+    }
+    .rank-text b { color: #8b5cf6; }
+
+    .footer-tip {
+      padding: 6px 14px 10px;
+      font-size: 10px;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      border-top: 1px solid #e5e7eb;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 24px 24px 0 0;
+    }
+    .footer-tip b { color: #7c3aed; }
+
+    @media (max-width: 640px) {
+      .app-header { padding-inline: 12px; }
+      .main { padding-inline: 10px; }
+      .middle-row { gap: 8px; }
+      .tavita-wrapper { width: 120px; }
+      .tavita-bubble { max-width: 190px; }
+      .rank-row { flex-direction: column-reverse; align-items: stretch; }
+      .rank-row .primary-btn { width: 100%; }
+    }
   </style>
 </head>
 <body>
-
 <div class="app">
+  <!-- HEADER -->
   <header class="app-header">
     <div class="header-main">
       <div class="logo-wrap">
@@ -105,6 +471,7 @@
     </div>
   </header>
 
+  <!-- MAIN -->
   <main class="main">
     <section class="game-card">
       <div class="top-row">
@@ -128,14 +495,24 @@
         می‌روی مرحله بعد.
       </p>
 
+      <!-- طاویتا + ستون بازی -->
       <div class="middle-row">
+        <!-- طاویتا -->
         <div class="tavita-wrapper">
           <div class="tavita-bubble">
-            <span id="tavitaText">سلام! بیا از همین کلمه چندتا کلمهٔ تازه دربیار ببینیم چی کار می‌کنی 😎✨</span>
+            <span id="tavitaText">
+              سلام! بیا از همین کلمه چندتا کلمهٔ تازه دربیار ببینیم چی کار می‌کنی 😎✨
+            </span>
           </div>
-          <img id="tavitaImage" class="tavita-img" src="https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png" alt="کاراکتر طاویتا" />
+          <img
+            id="tavitaImage"
+            class="tavita-img"
+            src="https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png"
+            alt="کاراکتر طاویتا"
+          />
         </div>
 
+        <!-- ستون راست -->
         <div class="middle-right">
           <div class="found-box">
             <div class="found-header">
@@ -160,14 +537,22 @@
         </div>
       </div>
 
-      <input id="wordInput" class="word-input" type="text" placeholder="کلمه‌ای که ساختی را اینجا بنویس و روی «ثبت کلمه» بزن..." />
+      <input
+        id="wordInput"
+        class="word-input"
+        type="text"
+        placeholder="کلمه‌ای که ساختی را اینجا بنویس و روی «ثبت کلمه» بزن..."
+      />
+
       <button id="checkBtn" class="primary-btn" type="button">
         <span>➕</span>
         <span>ثبت کلمه</span>
       </button>
 
       <div class="rank-row">
-        <div id="rankText" class="rank-text">اگر همهٔ مراحل فعلی را رد کنی، <b>استاد کلمات طاویتا</b> می‌شوی 😉</div>
+        <div id="rankText" class="rank-text">
+          اگر همهٔ مراحل فعلی را رد کنی، <b>استاد کلمات طاویتا</b> می‌شوی 😉
+        </div>
         <button id="nextBtn" class="primary-btn" type="button" disabled>
           <span>▶️</span>
           <span>مرحله بعد</span>
@@ -176,319 +561,245 @@
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer class="footer-tip">
     <div>
       ساخته شده توسط <b>طاویتا</b> – هر وقت خواستی می‌تونی از اول بازی کنی و رکورد جدید بزنی.
     </div>
   </footer>
 </div>
+
 <script>
-// =========================
-//  ۱) تعریف مراحل (۶۰ مرحله)
-// =========================
+  const TAVITA_IMAGES = {
+    explainFancy: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-16-26-209.png",
+    medal: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-12-570.png",
+    sad: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-14-57-50-229.png",
+    explainSimple: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png",
+    letters: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-13-56-364.png",
+    clap: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-15-32-972.png",
+    proud: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-30-637.png",
+  };
 
-const levelTemplates = [
-  {
-    name: "هوش مصنوعی",
-    easy: ["شوی", "هوس"], 
-    medium: ["شیوع", "موش", "عوض"],
-    hard: ["شمع", "ویژه", "صوم", "عشق"],
-    expert: ["شعور", "موضوع", "صعود", "هوش مصنوعی", "هیچ", "شوق"]
-  },
-  {
-    name: "تولید محتوا",
-    easy: ["تاو", "دوا"],
-    medium: ["تولد", "حدود", "داوت"],
-    hard: ["محدود", "دوتایی", "تحویل", "داوود"],
-    expert: ["محدودیت", "تحمیل", "محتاط", "اولویت", "تولید محتوا", "احتیاط"]
-  },
-  {
-    name: "مهربانی",
-    easy: ["بار", "نام"],
-    medium: ["بهار", "مانی", "رهبر"],
-    hard: ["مهربان", "بهانه", "میهمان", "نهایی"],
-    expert: ["بهره‌مند", "مهمانی", "رهبری", "بهینه", "مهربانی", "بیمار"]
-  },
-  {
-    name: "دوستانه",
-    easy: ["دست", "نود"],
-    medium: ["دانه", "ستون", "سوته"],
-    hard: ["دستان", "دوستان", "ستاده", "نواده"],
-    expert: ["داستان", "نوستان", "دوستانه", "استوانه", "دوسه", "نوسانات"]
-  },
-  {
-    name: "صداقت",
-    easy: ["صد", "دقت"],
-    medium: ["صدا", "قات", "تصدق"],
-    hard: ["صادق", "اقتصاد", "تصادف", "قصد"],
-    expert: ["صدق", "صداقت", "تصدیق", "اعتقاد", "قاصد", "تصاعد"]
-  },
-  {
-    name: "شکوفایی",
-    easy: ["شیک", "کفش"],
-    medium: ["کوفی", "شوک", "کشف"],
-    hard: ["شکوفا", "کشویی", "فیش", "شیفو"],
-    expert: ["شکوفایی", "کشو", "شکاف", "کیفی", "شفاف", "کشف"]
-  },
-  {
-    name: "همدلانه",
-    easy: ["دل", "نام"],
-    medium: ["همه", "دلم", "مانه"],
-    hard: ["همدل", "دهانه", "مهندل", "نامه"],
-    expert: ["همدلانه", "همدل", "لانه", "مهمان", "دهان", "هلند"]
-  },
-  {
-    name: "فروتنانه",
-    easy: ["تن", "نان"],
-    medium: ["فرو", "تنور", "نفرت"],
-    hard: ["فروتن", "نفرات", "تنوره", "نانوا"],
-    expert: ["فروتنانه", "فروت", "فرتوت", "تنها", "نوار", "نفرات"]
-  },
-  {
-    name: "پیروزمندانه",
-    easy: ["پیر", "زند"],
-    medium: ["پیراز", "زنده", "مردن"],
-    hard: ["پیروز", "زنانه", "مردانه", "پیرامون"],
-    expert: ["پیروزمند", "پیروزمندانه", "زیرزمینی", "پردازنده", "رهنمود", "پیران"]
-  },
-  {
-    name: "شادمانی",
-    easy: ["شاد", "دانا"],
-    medium: ["شانه", "دامن", "مانی"],
-    hard: ["شادمان", "دانای", "نمایش", "شیدایی"],
-    expert: ["شادمانی", "نمایشی", "دانشمند", "اشیا", "امان", "نمایان"]
-  },
-  {
-    name: "میهمان‌نوازی",
-    easy: ["نام", "زمان"],
-    medium: ["میهمان", "نوازی", "نماز"],
-    hard: ["میهمانی", "میهن", "زمانی", "نمایان"],
-    expert: ["میهمان‌نوازی", "نوآموزان", "میهنی", "نمایشنامه", "هیزم", "زمین"]
-  },
-  {
-    name: "دلاورمردان",
-    easy: ["دل", "مرد"],
-    medium: ["دلاور", "مردان", "درمان"],
-    hard: ["دلاورمرد", "مردا", "درآمد", "نامدار"],
-    expert: ["دلاورمردان", "درماند", "نامداران", "مردمدار", "درآوردن", "نامردان"]
-  },
-  {
-    name: "خوش‌بختانه",
-    easy: ["خوب", "تخت"],
-    medium: ["خوشه", "بخت", "تخته"],
-    hard: ["خوشبخت", "بختانه", "ختنه", "نخست"],
-    expert: ["خوش‌بختانه", "نخست", "تخته", "بخشانه", "نخستگان", "خشونت"]
-  },
-  {
-    name: "انسان‌دوستی",
-    easy: ["دست", "سود"],
-    medium: ["انسان", "دوست", "ستون"],
-    hard: ["دوستان", "انسانی", "داستان", "نوستان"],
-    expert: ["انسان‌دوستی", "دوستانه", "نوسانات", "استوانه", "داستان", "دانستنی"]
-  },
-  {
-    name: "طاویتا",
-    easy: ["ایتا", "تاو"],
-    medium: ["طاو", "تاو", "آیت"],
-    hard: ["آیت", "ای", "طوا", "طاو"],
-    expert: ["طاویتا", "طاو", "تاو", "آیت", "ای", "آوات"]
-  },
-];
+  const levels = [
+    { base: "باد",     answers: ["باد", "بد", "دا"],              needed: 2 },
+    { base: "شیر",     answers: ["شیر", "ریش", "ری", "یر"],       needed: 2 },
+    { base: "کتاب",    answers: ["کتاب", "تاب", "باک", "کت"],     needed: 3 },
+    { base: "دوست",    answers: ["دوست", "دوس", "سود", "دوت"],    needed: 3 },
+    { base: "باران",   answers: ["باران", "بار", "ران", "بر"],    needed: 3 },
+    { base: "دریا",    answers: ["دریا", "یار", "دیر", "راید"],   needed: 3 },
+    { base: "مدرسه",   answers: ["مدرسه", "درس", "رسم", "مرد"],   needed: 4 },
+    { base: "داستان",  answers: ["داستان", "داست", "سان", "دان"], needed: 4 },
+    { base: "دفترچه",  answers: ["دفترچه", "دفتر", "چفت", "رفت"], needed: 3 },
+    { base: "کیفیت",   answers: ["کیفیت", "کیف", "فیت", "فیک"],   needed: 3 },
+  ];
 
-// =========================
-//  ۲) تصاویر طاویتا
-// =========================
-const CHARACTER_IMAGES = {
-  novice: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-57-40-095.png",
-  expert: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-58-08-424.png",
-  master: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-58-47-930.png",
-  legend: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-59-31-841.png",
-  champion: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-18-00-12-353.png"
-};
+  const totalLevels = levels.length;
 
-// =========================
-//  ۳) تنظیمات طاویتا
-// =========================
-function setTavita(mode, text) {
-  const tavitaImg = document.getElementById("tavitaImage");
-  const tavitaBubble = document.getElementById("tavitaText");
+  let currentLevelIndex = 0;
+  let foundWords = [];
+  let score = 0;
 
-  switch (mode) {
-    case "start":
-      tavitaImg.src = CHARACTER_IMAGES.novice;
-      tavitaBubble.textContent = text || "خوش آمدید به بازی! شما اکنون شاگرد کلمات طاویتا هستید.";
-      break;
-    case "expert":
-      tavitaImg.src = CHARACTER_IMAGES.expert;
-      tavitaBubble.textContent = text || "تبریک! حالا استاد کلمات طاویتا شدی!";
-      break;
-    case "master":
-      tavitaImg.src = CHARACTER_IMAGES.master;
-      tavitaBubble.textContent = text || "آفرین! استاد بزرگ کلمات طاویتا شدی!";
-      break;
-    case "legend":
-      tavitaImg.src = CHARACTER_IMAGES.legend;
-      tavitaBubble.textContent = text || "تو استاد افسانه‌ای کلمات طاویتا شدی!";
-      break;
-    case "champion":
-      tavitaImg.src = CHARACTER_IMAGES.champion;
-      tavitaBubble.textContent = text || "تبریک! تو قهرمان بازی کلمات طاویتا شدی! اسکرین‌شات بگیر و بفرست.";
-      break;
-    default:
-      tavitaImg.src = "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png";
-      tavitaBubble.textContent = text || "";
-  }
-}
+  const scoreTextEl     = document.getElementById("scoreText");
+  const levelNumberEl   = document.getElementById("levelNumber");
+  const totalLevelsEl   = document.getElementById("totalLevels");
+  const baseWordLettersEl = document.getElementById("baseWordLetters");
+  const levelGoalEl     = document.getElementById("levelGoal");
+  const statusTextEl    = document.getElementById("statusText");
+  const wordInputEl     = document.getElementById("wordInput");
+  const checkBtn        = document.getElementById("checkBtn");
+  const shuffleBtn      = document.getElementById("shuffleBtn");
+  const nextBtn         = document.getElementById("nextBtn");
+  const foundListEl     = document.getElementById("foundList");
+  const foundCountEl    = document.getElementById("foundCount");
+  const neededCountEl   = document.getElementById("neededCount");
+  const tavitaImgEl     = document.getElementById("tavitaImage");
+  const tavitaTextEl    = document.getElementById("tavitaText");
+  const rankTextEl      = document.getElementById("rankText");
 
-// =========================
-//  ۴) کمکی برای جابجایی حروف
-// =========================
-function shuffleString(str) {
-  const arr = str.split("");
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr.join("");
-}
+  totalLevelsEl.textContent = totalLevels.toString();
 
-function renderBaseWord() {
-  const level = levelTemplates[currentLevelIndex];
-  baseWordLettersEl.innerHTML = "";
-  const shuffled = shuffleString(level.base);
-  shuffled.split("").forEach((ch) => {
-    const span = document.createElement("span");
-    span.className = "letter-chip";
-    span.textContent = ch;
-    baseWordLettersEl.appendChild(span);
-  });
-}
-
-function renderFoundWords() {
-  foundListEl.innerHTML = "";
-  foundWords.forEach((w) => {
-    const span = document.createElement("span");
-    span.className = "found-item";
-    span.textContent = w;
-    foundListEl.appendChild(span);
-  });
-  foundCountEl.textContent = foundWords.length.toString();
-}
-
-function setStatus(msg, type) {
-  statusTextEl.textContent = msg || "";
-  statusTextEl.classList.remove("ok", "err");
-  if (type === "ok") statusTextEl.classList.add("ok");
-  if (type === "err") statusTextEl.classList.add("err");
-
-  statusTextEl.classList.add("shake");
-  setTimeout(() => statusTextEl.classList.remove("shake"), 300);
-}
-
-// =========================
-//  ۵) مدیریت مراحل
-// =========================
-function initLevel() {
-  const level = levelTemplates[currentLevelIndex];
-  levelNumberEl.textContent = (currentLevelIndex + 1).toString();
-  scoreTextEl.textContent = score.toString();
-  neededCountEl.textContent = level.needed.toString();
-
-  foundWords = [];
-  renderFoundWords();
-  renderBaseWord();
-
-  levelGoalEl.innerHTML = `باید حداقل <b>${level.needed}</b> کلمهٔ درست پیدا کنی.`;
-
-  setStatus("کلماتت را یکی‌یکی وارد کن و ثبت کن.", "");
-  wordInputEl.value = "";
-  wordInputEl.focus();
-  nextBtn.disabled = true;
-
-  setTavita("start", `مرحلهٔ ${currentLevelIndex + 1} شروع شد؛ ببین از این کلمه چندتا کلمه درمیاری ✨`);
-}
-
-// =========================
-//  ۶) چک کردن کلمه وارد شده
-// =========================
-function checkWord() {
-  const level = levelTemplates[currentLevelIndex];
-  let w = normalizeWord(wordInputEl.value);
-  if (!w) {
-    setStatus("اول یک کلمه بنویس.", "err");
-    setTavita("error", "هنوز چیزی ننوشتی؛ یک کلمه امتحان کن 😅");
-    return;
-  }
-  if (w.length < 2) {
-    setStatus("کلمه خیلی کوتاه است؛ حداقل ۲ حرفی باشد.", "err");
-    setTavita("error", "این یکی خیلی کوتاه بود؛ یک کم طولانی‌ترش کن 🤏");
-    return;
-  }
-  if (!canBuildFromBase(level.base, w)) {
-    setStatus("این کلمه را نمی‌توان فقط با حروف کلمهٔ اصلی ساخت.", "err");
-    setTavita("error", "حروفش جور درنمیاد؛ فقط از همین حروف استفاده کن 😉");
-    return;
-  }
-  const allowed = level.answers.map(normalizeWord);
-  if (!allowed.includes(w)) {
-    setStatus("این کلمه جزو جواب‌های این مرحله نیست؛ یکی دیگر امتحان کن.", "err");
-    setTavita("error", "این یکی تو جواب‌های این مرحله نیست؛ دوباره تلاش کن 🤔");
-    return;
-  }
-  if (foundWords.includes(w)) {
-    setStatus("این کلمه را قبلاً ثبت کردی.", "err");
-    setTavita("error", "این رو قبلاً گفتی؛ یک چیز تازه بگو 😊");
-    return;
+  function shuffleString(str) {
+    const arr = str.split("");
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr.join("");
   }
 
-  foundWords.push(w);
-  renderFoundWords();
-  wordInputEl.value = "";
-  wordInputEl.focus();
-  score += 10;
-  scoreTextEl.textContent = score.toString();
-  setStatus("آفرین! یک کلمهٔ جدید پیدا کردی 🌿", "ok");
-  setTavita("correct", "آفرین! یک کلمهٔ تازه به لیست اضافه شد 👏✨");
-
-  if (foundWords.length >= level.needed) {
-    setStatus("عالی! حداقل کلمات لازم را پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
-    nextBtn.disabled = false;
-    setTavita("level", "این مرحله رو ترکوندی! آماده‌ای بریم سراغ بعدی؟ 🏅");
+  function renderBaseWord() {
+    const level = levels[currentLevelIndex];
+    baseWordLettersEl.innerHTML = "";
+    const shuffled = shuffleString(level.base);
+    shuffled.split("").forEach((ch) => {
+      const span = document.createElement("span");
+      span.className = "letter-chip";
+      span.textContent = ch;
+      baseWordLettersEl.appendChild(span);
+    });
   }
-}
 
-checkBtn.addEventListener("click", checkWord);
-
-wordInputEl.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    checkWord();
+  function renderFoundWords() {
+    foundListEl.innerHTML = "";
+    foundWords.forEach((w) => {
+      const chip = document.createElement("span");
+      chip.className = "found-item";
+      chip.textContent = w;
+      foundListEl.appendChild(chip);
+    });
+    foundCountEl.textContent = foundWords.length.toString();
   }
-});
 
-shuffleBtn.addEventListener("click", () => {
-  renderBaseWord();
-  setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
-});
+  function setStatus(msg, type) {
+    statusTextEl.textContent = msg || "";
+    statusTextEl.classList.remove("ok", "err", "shake");
+    if (type === "ok") statusTextEl.classList.add("ok");
+    if (type === "err") {
+      statusTextEl.classList.add("err", "shake");
+      setTimeout(() => statusTextEl.classList.remove("shake"), 250);
+    }
+  }
 
-nextBtn.addEventListener("click", () => {
-  if (currentLevelIndex < levelTemplates.length - 1) {
-    currentLevelIndex++;
-    initLevel();
-  } else {
-    setStatus(
-      "تبریک! همهٔ مراحل فعلی را تمام کردی 🎉 می‌توانی صفحه را رفرش کنی و دوباره بازی کنی.",
-      "ok"
-    );
-    setTavita(
-      "proud",
-      "تو رسماً استاد کلمات طاویتا شدی! هر وقت خواستی از اول شروع کن و رکورد بزن 😎🏆"
-    );
+  function normalizeWord(w) {
+    return w.replace(/\s+/g, "").trim();
+  }
+
+  function updateRankMessage() {
+    const lvl = currentLevelIndex + 1;
+    if (lvl < 5) {
+      rankTextEl.innerHTML =
+        "اگر این چند مرحله را رد کنی، کم‌کم <b>شاگرد کلمات طاویتا</b> می‌شوی 😌";
+    } else if (lvl < 20) {
+      rankTextEl.innerHTML =
+        "اگر همهٔ مراحل فعلی را رد کنی، یک <b>استاد کلمات طاویتا</b> واقعی می‌شوی 😉";
+    } else {
+      rankTextEl.innerHTML =
+        "اینجاها کم‌کم به <b>استاد بزرگ طاویتا</b> نزدیک می‌شوی 🤯🏆";
+    }
+  }
+
+  function setTavita(mode, text) {
+    switch (mode) {
+      case "shuffle": tavitaImgEl.src = TAVITA_IMAGES.letters; break;
+      case "correct": tavitaImgEl.src = TAVITA_IMAGES.clap; break;
+      case "error":   tavitaImgEl.src = TAVITA_IMAGES.sad; break;
+      case "level":   tavitaImgEl.src = TAVITA_IMAGES.medal; break;
+      case "proud":   tavitaImgEl.src = TAVITA_IMAGES.proud; break;
+      default:        tavitaImgEl.src = TAVITA_IMAGES.explainSimple;
+    }
+    if (text) tavitaTextEl.innerHTML = text;
+  }
+
+  function initLevel() {
+    const level = levels[currentLevelIndex];
+    levelNumberEl.textContent = (currentLevelIndex + 1).toString();
+    foundWords = [];
+    renderFoundWords();
+    scoreTextEl.textContent = score.toString();
+    renderBaseWord();
+    neededCountEl.textContent = level.needed.toString();
+    levelGoalEl.innerHTML = `باید حداقل <b>${level.needed}</b> کلمهٔ درست پیدا کنی.`;
+    setStatus("کلماتت را یکی‌یکی وارد کن و ثبت کن.", "");
+    wordInputEl.value = "";
     nextBtn.disabled = true;
+    updateRankMessage();
+    setTavita(
+      "neutral",
+      "این مرحله تازه شروع شده؛ ببینیم از این کلمه چندتا کلمهٔ خفن درمیاری 😎✨"
+    );
   }
-});
 
-initLevel();
+  function canBuildFromBase(base, word) {
+    const baseArr = base.split("");
+    const wordArr = word.split("");
+    const baseCount = {};
+    const wordCount = {};
+    baseArr.forEach((ch) => (baseCount[ch] = (baseCount[ch] || 0) + 1));
+    wordArr.forEach((ch) => (wordCount[ch] = (wordCount[ch] || 0) + 1));
+    for (const ch in wordCount) {
+      if (!baseCount[ch] || wordCount[ch] > baseCount[ch]) return false;
+    }
+    return true;
+  }
+
+  function checkWord() {
+    const level = levels[currentLevelIndex];
+    let w = normalizeWord(wordInputEl.value);
+    if (!w) {
+      setStatus("اول یک کلمه بنویس.", "err");
+      setTavita("error", "هنوز چیزی ننوشتی؛ یک کلمه امتحان کن 😅");
+      return;
+    }
+    if (w.length < 2) {
+      setStatus("کلمه خیلی کوتاه است؛ حداقل ۲ حرفی باشد.", "err");
+      setTavita("error", "این یکی خیلی کوتاه بود؛ یک کم طولانی‌ترش کن 🤏");
+      return;
+    }
+    if (!canBuildFromBase(level.base, w)) {
+      setStatus("این کلمه را نمی‌توان فقط با حروف کلمهٔ اصلی ساخت.", "err");
+      setTavita("error", "حروفش جور درنمیاد؛ فقط از همین حروف استفاده کن 😉");
+      return;
+    }
+    const allowed = level.answers.map(normalizeWord);
+    if (!allowed.includes(w)) {
+      setStatus("این کلمه جزو جواب‌های این مرحله نیست؛ یکی دیگر امتحان کن.", "err");
+      setTavita("error", "این یکی تو جواب‌های این مرحله نیست؛ دوباره تلاش کن 🤔");
+      return;
+    }
+    if (foundWords.includes(w)) {
+      setStatus("این کلمه را قبلاً ثبت کردی.", "err");
+      setTavita("error", "این رو قبلاً گفتی؛ یک چیز تازه بگو 😊");
+      return;
+    }
+
+    foundWords.push(w);
+    renderFoundWords();
+    wordInputEl.value = "";
+    wordInputEl.focus();
+    score += 10;
+    scoreTextEl.textContent = score.toString();
+    setStatus("آفرین! یک کلمهٔ جدید پیدا کردی 🌿", "ok");
+    setTavita("correct", "آفرین! یک کلمهٔ تازه به لیست اضافه شد 👏✨");
+
+    if (foundWords.length >= level.needed) {
+      setStatus("عالی! حداقل کلمات لازم را پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
+      nextBtn.disabled = false;
+      setTavita("level", "این مرحله رو ترکوندی! آماده‌ای بریم سراغ بعدی؟ 🏅");
+    }
+  }
+
+  checkBtn.addEventListener("click", checkWord);
+
+  wordInputEl.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      checkWord();
+    }
+  });
+
+  shuffleBtn.addEventListener("click", () => {
+    renderBaseWord();
+    setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentLevelIndex < levels.length - 1) {
+      currentLevelIndex++;
+      initLevel();
+    } else {
+      setStatus(
+        "تبریک! همهٔ مراحل فعلی را تمام کردی 🎉 می‌توانی صفحه را رفرش کنی و دوباره بازی کنی.",
+        "ok"
+      );
+      setTavita(
+        "proud",
+        "تو رسماً استاد کلمات طاویتا شدی! هر وقت خواستی از اول شروع کن و رکورد بزن 😎🏆"
+      );
+      nextBtn.disabled = true;
+    }
+  });
+
+  initLevel();
 </script>
 </body>
 </html>
