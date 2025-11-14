@@ -580,60 +580,94 @@
     proud: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-30-637.png",
   };
 
-  // کلمات پایه برای ساخت مراحل بازی
-  const baseWords = [
-    "باد", "شیر", "کتاب", "دوست", "باران", "دریا", "مدرسه", "داستان", "دفترچه", "کیفیت",
-    "هوش مصنوعی", "تولید محتوا", "مهربانی", "دوستانه", "صداقت"
-  ];
-
-  // تابع برای ایجاد ترکیب‌های ممکن از حروف هر کلمه
-  function generateAnswers(word) {
-    let answers = [];
-    for (let i = 1; i < word.length; i++) {
-      answers.push(word.slice(0, i)); // جواب‌های مختلف را با برش‌های مختلف اضافه می‌کند
-    }
-    return answers;
-  }
-
-  // ساخت ۶۰ سطح به‌طور خودکار از کلمات پایه
-  const levels = [];
-  let levelCounter = 0;
-
-  for (let i = 0; i < 60; i++) {
-    const word = baseWords[i % baseWords.length];  // اگر تعداد کلمات پایه کمتر از ۶۰ بود، آن‌ها تکرار می‌شوند
-    const answers = generateAnswers(word);
-    levels.push({
-      base: word,
-      answers: answers,
-      needed: Math.min(2 + Math.floor(i / 4), answers.length),  // مرحله‌بندی آسان‌تر در مراحل اولیه
-    });
-  }
+  const levels = [
+  { base: "هوش مصنوعی", answers: ["شوی", "هوس"], needed: 2 },
+  { base: "تولید محتوا", answers: ["تاو", "دوا"], needed: 2 },
+  { base: "مهربانی", answers: ["بار", "نام"], needed: 2 },
+  { base: "دوستانه", answers: ["دست", "نود"], needed: 2 },
+  { base: "صداقت", answers: ["صد", "دقت"], needed: 2 },
+  { base: "شکوفایی", answers: ["شیک", "کفش"], needed: 2 },
+  { base: "همدلانه", answers: ["دل", "نام"], needed: 2 },
+  { base: "فروتنانه", answers: ["تن", "نان"], needed: 2 },
+  { base: "پیروزمندانه", answers: ["پیر", "زند"], needed: 2 },
+  { base: "شادمانی", answers: ["شاد", "دانا"], needed: 2 },
+  { base: "میهمان‌نوازی", answers: ["نام", "زمان"], needed: 2 },
+  { base: "دلاورمردان", answers: ["دل", "مرد"], needed: 2 },
+  { base: "خوش‌بختانه", answers: ["خوب", "تخت"], needed: 2 },
+  { base: "انسان‌دوستی", answers: ["دست", "سود"], needed: 2 },
+  { base: "طاویتا", answers: ["ایتا", "تاو"], needed: 2 },
+  { base: "هوش مصنوعی", answers: ["شیوع", "موش", "عوض"], needed: 3 },
+  { base: "تولید محتوا", answers: ["تولد", "حدود", "داوت"], needed: 3 },
+  { base: "مهربانی", answers: ["بهار", "مانی", "رهبر"], needed: 3 },
+  { base: "دوستانه", answers: ["دانه", "ستون", "سوته"], needed: 3 },
+  { base: "صداقت", answers: ["صدا", "قات", "تصدق"], needed: 3 },
+  { base: "شکوفایی", answers: ["کوفی", "شوک", "کشف"], needed: 3 },
+  { base: "همدلانه", answers: ["همه", "دلم", "مانه"], needed: 3 },
+  { base: "فروتنانه", answers: ["فرو", "تنور", "نفرت"], needed: 3 },
+  { base: "پیروزمندانه", answers: ["پیراز", "زنده", "مردن"], needed: 3 },
+  { base: "شادمانی", answers: ["شانه", "دامن", "مانی"], needed: 3 },
+  { base: "میهمان‌نوازی", answers: ["میهمان", "نوازی", "نماز"], needed: 3 },
+  { base: "دلاورمردان", answers: ["دلاور", "مردان", "درمان"], needed: 3 },
+  { base: "خوش‌بختانه", answers: ["خوشه", "بخت", "تخته"], needed: 3 },
+  { base: "انسان‌دوستی", answers: ["انسان", "دوست", "ستون"], needed: 3 },
+  { base: "طاویتا", answers: ["طاو", "تاو", "آیت"], needed: 3 },
+  { base: "هوش مصنوعی", answers: ["شمع", "ویژه", "صوم", "عشق"], needed: 4 },
+  { base: "تولید محتوا", answers: ["محدود", "دوتایی", "تحویل", "داوود"], needed: 4 },
+  { base: "مهربانی", answers: ["مهربان", "بهانه", "میهمان", "نهایی"], needed: 4 },
+  { base: "دوستانه", answers: ["دستان", "دوستان", "ستاده", "نواده"], needed: 4 },
+  { base: "صداقت", answers: ["صادق", "اقتصاد", "تصادف", "قصد"], needed: 4 },
+  { base: "شکوفایی", answers: ["شکوفا", "کشویی", "فیش", "شیفو"], needed: 4 },
+  { base: "همدلانه", answers: ["همدل", "دهانه", "مهندل", "نامه"], needed: 4 },
+  { base: "فروتنانه", answers: ["فروتن", "نفرات", "تنوره", "نانوا"], needed: 4 },
+  { base: "پیروزمندانه", answers: ["پیروز", "زنانه", "مردانه", "پیرامون"], needed: 4 },
+  { base: "شادمانی", answers: ["شادمان", "دانای", "نمایش", "شیدایی"], needed: 4 },
+  { base: "میهمان‌نوازی", answers: ["میهمانی", "میهن", "زمانی", "نمایان"], needed: 4 },
+  { base: "دلاورمردان", answers: ["دلاورمرد", "مردا", "درآمد", "نامدار"], needed: 4 },
+  { base: "خوش‌بختانه", answers: ["خوشبخت", "بختانه", "ختنه", "نخست"], needed: 4 },
+  { base: "انسان‌دوستی", answers: ["دوستان", "انسانی", "داستان", "نوستان"], needed: 4 },
+  { base: "طاویتا", answers: ["آیت", "ای", "طوا", "طاو"], needed: 4 },
+  { base: "هوش مصنوعی", answers: ["شعور", "موضوع", "صعود", "هوش مصنوعی", "هیچ", "شوق"], needed: 6 },
+  { base: "تولید محتوا", answers: ["محدودیت", "تحمیل", "محتاط", "اولویت", "تولید محتوا", "احتیاط"], needed: 6 },
+  { base: "مهربانی", answers: ["بهره‌مند", "مهمانی", "رهبری", "بهینه", "مهربانی", "بیمار"], needed: 6 },
+  { base: "دوستانه", answers: ["داستان", "نوستان", "دوستانه", "استوانه", "دوسه", "نوسانات"], needed: 6 },
+  { base: "صداقت", answers: ["صدق", "صداقت", "تصدیق", "اعتقاد", "قاصد", "تصاعد"], needed: 6 },
+  { base: "شکوفایی", answers: ["شکوفایی", "کشو", "شکاف", "کیفی", "شفاف", "کشف"], needed: 6 },
+  { base: "همدلانه", answers: ["همدلانه", "همدل", "لانه", "مهمان", "دهان", "هلند"], needed: 6 },
+  { base: "فروتنانه", answers: ["فروتنانه", "فروت", "فرتوت", "تنها", "نوار", "نفرات"], needed: 6 },
+  { base: "پیروزمندانه", answers: ["پیروزمند", "پیروزمندانه", "زیرزمینی", "پردازنده", "رهنمود", "پیران"], needed: 6 },
+  { base: "شادمانی", answers: ["شادمانی", "نمایشی", "دانشمند", "اشیا", "امان", "نمایان"], needed: 6 },
+  { base: "میهمان‌نوازی", answers: ["میهمان‌نوازی", "نوآموزان", "میهنی", "نمایشنامه", "هیزم", "زمینه"], needed: 6 },
+  { base: "دلاورمردان", answers: ["دلاورمردان", "درماند", "نامداران", "مردمدار", "درآوردن", "نامردان"], needed: 6 },
+  { base: "خوش‌بختانه", answers: ["خوش‌بختانه", "نخست", "تخته", "بخشانه", "نخستگان", "خشونت"], needed: 6 },
+  { base: "انسان‌دوستی", answers: ["انسان‌دوستی", "دوستانه", "نوسانات", "استوانه", "داستان", "دانستنی"], needed: 6 },
+  { base: "طاویتا", answers: ["طاویتا", "طاو", "تاو", "آیت", "ای", "آوات"], needed: 6 },
+];
 
   const totalLevels = levels.length;
+
   let currentLevelIndex = 0;
   let foundWords = [];
   let score = 0;
 
-  const scoreTextEl = document.getElementById("scoreText");
-  const levelNumberEl = document.getElementById("levelNumber");
-  const totalLevelsEl = document.getElementById("totalLevels");
+  const scoreTextEl     = document.getElementById("scoreText");
+  const levelNumberEl   = document.getElementById("levelNumber");
+  const totalLevelsEl   = document.getElementById("totalLevels");
   const baseWordLettersEl = document.getElementById("baseWordLetters");
-  const levelGoalEl = document.getElementById("levelGoal");
-  const statusTextEl = document.getElementById("statusText");
-  const wordInputEl = document.getElementById("wordInput");
-  const checkBtn = document.getElementById("checkBtn");
-  const shuffleBtn = document.getElementById("shuffleBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const foundListEl = document.getElementById("foundList");
-  const foundCountEl = document.getElementById("foundCount");
-  const neededCountEl = document.getElementById("neededCount");
-  const tavitaImgEl = document.getElementById("tavitaImage");
-  const tavitaTextEl = document.getElementById("tavitaText");
-  const rankTextEl = document.getElementById("rankText");
+  const levelGoalEl     = document.getElementById("levelGoal");
+  const statusTextEl    = document.getElementById("statusText");
+  const wordInputEl     = document.getElementById("wordInput");
+  const checkBtn        = document.getElementById("checkBtn");
+  const shuffleBtn      = document.getElementById("shuffleBtn");
+  const nextBtn         = document.getElementById("nextBtn");
+  const foundListEl     = document.getElementById("foundList");
+  const foundCountEl    = document.getElementById("foundCount");
+  const neededCountEl   = document.getElementById("neededCount");
+  const tavitaImgEl     = document.getElementById("tavitaImage");
+  const tavitaTextEl    = document.getElementById("tavitaText");
+  const rankTextEl      = document.getElementById("rankText");
 
   totalLevelsEl.textContent = totalLevels.toString();
 
-  // تابع برای جابجایی حروف
   function shuffleString(str) {
     const arr = str.split("");
     for (let i = arr.length - 1; i > 0; i--) {
@@ -643,7 +677,6 @@
     return arr.join("");
   }
 
-  // نمایش کلمه اصلی برای سطح جاری
   function renderBaseWord() {
     const level = levels[currentLevelIndex];
     baseWordLettersEl.innerHTML = "";
@@ -656,7 +689,6 @@
     });
   }
 
-  // نمایش کلمات پیدا شده
   function renderFoundWords() {
     foundListEl.innerHTML = "";
     foundWords.forEach((w) => {
@@ -668,7 +700,6 @@
     foundCountEl.textContent = foundWords.length.toString();
   }
 
-  // نمایش وضعیت
   function setStatus(msg, type) {
     statusTextEl.textContent = msg || "";
     statusTextEl.classList.remove("ok", "err", "shake");
@@ -679,12 +710,36 @@
     }
   }
 
-  // تابع برای نرمال‌سازی کلمه
   function normalizeWord(w) {
     return w.replace(/\s+/g, "").trim();
   }
 
-  // تابع برای شروع یک سطح جدید
+  function updateRankMessage() {
+    const lvl = currentLevelIndex + 1;
+    if (lvl < 5) {
+      rankTextEl.innerHTML =
+        "اگر این چند مرحله را رد کنی، کم‌کم <b>شاگرد کلمات طاویتا</b> می‌شوی 😌";
+    } else if (lvl < 20) {
+      rankTextEl.innerHTML =
+        "اگر همهٔ مراحل فعلی را رد کنی، یک <b>استاد کلمات طاویتا</b> واقعی می‌شوی 😉";
+    } else {
+      rankTextEl.innerHTML =
+        "اینجاها کم‌کم به <b>استاد بزرگ طاویتا</b> نزدیک می‌شوی 🤯🏆";
+    }
+  }
+
+  function setTavita(mode, text) {
+    switch (mode) {
+      case "shuffle": tavitaImgEl.src = TAVITA_IMAGES.letters; break;
+      case "correct": tavitaImgEl.src = TAVITA_IMAGES.clap; break;
+      case "error":   tavitaImgEl.src = TAVITA_IMAGES.sad; break;
+      case "level":   tavitaImgEl.src = TAVITA_IMAGES.medal; break;
+      case "proud":   tavitaImgEl.src = TAVITA_IMAGES.proud; break;
+      default:        tavitaImgEl.src = TAVITA_IMAGES.explainSimple;
+    }
+    if (text) tavitaTextEl.innerHTML = text;
+  }
+
   function initLevel() {
     const level = levels[currentLevelIndex];
     levelNumberEl.textContent = (currentLevelIndex + 1).toString();
@@ -697,44 +752,74 @@
     setStatus("کلماتت را یکی‌یکی وارد کن و ثبت کن.", "");
     wordInputEl.value = "";
     nextBtn.disabled = true;
+    updateRankMessage();
+    setTavita(
+      "neutral",
+      "این مرحله تازه شروع شده؛ ببینیم از این کلمه چندتا کلمهٔ خفن درمیاری 😎✨"
+    );
   }
 
-  // بررسی کلمه وارد شده
+  function canBuildFromBase(base, word) {
+    const baseArr = base.split("");
+    const wordArr = word.split("");
+    const baseCount = {};
+    const wordCount = {};
+    baseArr.forEach((ch) => (baseCount[ch] = (baseCount[ch] || 0) + 1));
+    wordArr.forEach((ch) => (wordCount[ch] = (wordCount[ch] || 0) + 1));
+    for (const ch in wordCount) {
+      if (!baseCount[ch] || wordCount[ch] > baseCount[ch]) return false;
+    }
+    return true;
+  }
+
   function checkWord() {
     const level = levels[currentLevelIndex];
     let w = normalizeWord(wordInputEl.value);
     if (!w) {
       setStatus("اول یک کلمه بنویس.", "err");
+      setTavita("error", "هنوز چیزی ننوشتی؛ یک کلمه امتحان کن 😅");
       return;
     }
     if (w.length < 2) {
       setStatus("کلمه خیلی کوتاه است؛ حداقل ۲ حرفی باشد.", "err");
+      setTavita("error", "این یکی خیلی کوتاه بود؛ یک کم طولانی‌ترش کن 🤏");
       return;
     }
-    if (!level.answers.includes(w)) {
+    if (!canBuildFromBase(level.base, w)) {
+      setStatus("این کلمه را نمی‌توان فقط با حروف کلمهٔ اصلی ساخت.", "err");
+      setTavita("error", "حروفش جور درنمیاد؛ فقط از همین حروف استفاده کن 😉");
+      return;
+    }
+    const allowed = level.answers.map(normalizeWord);
+    if (!allowed.includes(w)) {
       setStatus("این کلمه جزو جواب‌های این مرحله نیست؛ یکی دیگر امتحان کن.", "err");
+      setTavita("error", "این یکی تو جواب‌های این مرحله نیست؛ دوباره تلاش کن 🤔");
       return;
     }
     if (foundWords.includes(w)) {
       setStatus("این کلمه را قبلاً ثبت کردی.", "err");
+      setTavita("error", "این رو قبلاً گفتی؛ یک چیز تازه بگو 😊");
       return;
     }
 
     foundWords.push(w);
     renderFoundWords();
     wordInputEl.value = "";
+    wordInputEl.focus();
     score += 10;
     scoreTextEl.textContent = score.toString();
     setStatus("آفرین! یک کلمهٔ جدید پیدا کردی 🌿", "ok");
+    setTavita("correct", "آفرین! یک کلمهٔ تازه به لیست اضافه شد 👏✨");
 
     if (foundWords.length >= level.needed) {
       setStatus("عالی! حداقل کلمات لازم را پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
       nextBtn.disabled = false;
+      setTavita("level", "این مرحله رو ترکوندی! آماده‌ای بریم سراغ بعدی؟ 🏅");
     }
   }
 
-  // رویدادهای دکمه‌ها
   checkBtn.addEventListener("click", checkWord);
+
   wordInputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -744,7 +829,7 @@
 
   shuffleBtn.addEventListener("click", () => {
     renderBaseWord();
-    setStatus("حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨", "ok");
+    setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
   });
 
   nextBtn.addEventListener("click", () => {
@@ -752,12 +837,18 @@
       currentLevelIndex++;
       initLevel();
     } else {
-      setStatus("تبریک! همهٔ مراحل فعلی را تمام کردی 🎉", "ok");
+      setStatus(
+        "تبریک! همهٔ مراحل فعلی را تمام کردی 🎉 می‌توانی صفحه را رفرش کنی و دوباره بازی کنی.",
+        "ok"
+      );
+      setTavita(
+        "proud",
+        "تو رسماً استاد کلمات طاویتا شدی! هر وقت خواستی از اول شروع کن و رکورد بزن 😎🏆"
+      );
       nextBtn.disabled = true;
     }
   });
 
-  // شروع بازی با سطح اول
   initLevel();
 </script>
 </body>
