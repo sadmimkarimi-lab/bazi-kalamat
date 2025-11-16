@@ -5,7 +5,7 @@
   <title>بازی کلمات طاویتا</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- فونت وزیر -->
+  <!-- فونت وزیرمتن -->
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn/Vazirmatn-font-face.css" rel="stylesheet" />
 
   <style>
@@ -17,6 +17,7 @@
       --text-main: #111827;
       --text-muted: #6b7280;
       --radius-xl: 26px;
+      --gold: #facc15;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,6 +40,8 @@
       background: linear-gradient(145deg, #faf5ff, #eef4ff);
     }
 
+    .hidden { display: none; }
+
     /* HEADER */
 
     .app-header {
@@ -52,7 +55,7 @@
       box-shadow: 0 14px 30px rgba(109, 40, 217, 0.45);
       border-radius: 0 0 24px 24px;
       position: relative;
-      direction: rtl; /* کل هدر راست‌به‌چپ */
+      direction: rtl;
     }
 
     .header-main {
@@ -96,6 +99,14 @@
       50% { transform: scale(1.25); opacity: 0.7; }
     }
 
+    .header-buttons-row {
+      margin-top: 4px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
     .header-side {
       font-size: 11px;
       opacity: 0.95;
@@ -122,6 +133,48 @@
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+
+    .header-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+
+    .sound-btn {
+      border: none;
+      background: rgba(15,23,42,0.25);
+      color: #f9fafb;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .sound-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+    }
+
+    .sound-muted {
+      background: #f97373;
+    }
+
+    .summary-btn {
+      border: none;
+      background: rgba(15,23,42,0.18);
+      color: #e5e7eb;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
     /* MAIN */
@@ -154,6 +207,44 @@
       gap: 8px;
       font-size: 12px;
       color: var(--text-muted);
+      margin-bottom: 2px;
+      flex-wrap: wrap;
+    }
+
+    .score-text b { color: #22c55e; }
+
+    .combo-pill {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      font-size: 10px;
+      color: #92400e;
+      display: none;
+      margin-top: 4px;
+      align-self: flex-start;
+    }
+
+    .combo-pill.active {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      animation: pop 0.3s ease-out;
+    }
+
+    .record-pill {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      font-size: 11px;
+      color: #1d4ed8;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
+      white-space: nowrap;
+    }
+
+    .record-pill b {
+      color: #1d4ed8;
     }
 
     .level-pill {
@@ -165,23 +256,123 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      white-space: nowrap;
     }
     .level-pill strong { font-size: 13px; }
-    .score-text b { color: #22c55e; }
 
-    .game-title {
-      font-size: 16px;
-      font-weight: 700;
+    /* مود زمان‌دار */
+
+    .mode-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      min-width: 120px;
+    }
+
+    .mode-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      background: #eef2ff;
+      color: #111827;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(148, 163, 184, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .mode-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(148, 163, 184, 0.6);
+    }
+
+    .mode-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: 0 2px 6px rgba(148, 163, 184, 0.45);
+    }
+
+    .timer-label {
+      font-size: 10px;
+      color: #ef4444;
+    }
+
+    .mode-hint {
+      font-size: 10px;
+      color: #6b7280;
+      text-align: right;
+    }
+
+    .rank-bar {
+      margin-top: 4px;
       display: flex;
       align-items: center;
       gap: 6px;
+      font-size: 10px;
+      color: #6b7280;
     }
-    .game-title span { font-size: 18px; }
 
-    .rule-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.9;
+    .rank-steps {
+      flex: 1;
+      display: flex;
+      gap: 3px;
+    }
+
+    .rank-step {
+      flex: 1;
+      height: 5px;
+      border-radius: 999px;
+      background: #e5e7eb;
+    }
+
+    .rank-step.active {
+      background: linear-gradient(90deg, #a855f7, #f97316);
+    }
+
+    .rank-labels {
+      display: flex;
+      justify-content: space_between;
+      font-size: 9px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .mission-line {
+      font-size: 11px;
+      color: #4b5563;
+      margin-top: 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: #f9fafb;
+      border-radius: 14px;
+      border: 1px dashed #e5e7eb;
+      padding: 6px 10px;
+    }
+
+    .mission-badge {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px dashed #fb923c;
+      background: #fff7ed;
+      color: #c2410c;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+
+    .mission-done {
+      border-color: #22c55e;
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .mission-line span#missionText {
+      flex: 1;
     }
 
     /* ردیف وسط: طاویتا + ستون بازی */
@@ -189,9 +380,9 @@
     .middle-row {
       margin-top: 8px;
       display: flex;
-      align-items: flex-end; /* کف طاویتا و کادر اصلی هم‌خط */
+      align-items: flex-end;
       gap: 12px;
-      direction: ltr; /* طاویتا واقعا سمت چپ دیده شود */
+      direction: ltr;
     }
 
     .middle-right {
@@ -234,6 +425,12 @@
       border: 1px solid #ddd6fe;
       font-size: 11px;
       color: #4c1d95;
+      animation: pop 0.25s ease-out;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     /* کلمه اصلی */
@@ -322,7 +519,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      justify-content: flex-end; /* پاها می‌آید پایین */
+      justify-content: flex-end;
       padding-bottom: 0;
     }
 
@@ -364,19 +561,27 @@
     .word-input {
       width: 100%;
       border-radius: 999px;
-      border: 1px solid #e5e7ff;
+      border: 1px solid #c7d2fe;
       padding: 9px 12px;
       font-size: 13px;
       font-family: inherit;
-      background: #f9fafb;
+      background: #e5e7ff;
       margin-top: 4px;
+      box-shadow:
+        inset 0 2px 4px rgba(15, 23, 42, 0.22),
+        inset 0 0 0 1px rgba(199, 210, 254, 0.9);
+      transition: box-shadow 0.12s ease-out,
+                  background 0.12s ease-out,
+                  border-color 0.12s ease-out;
     }
 
     .word-input:focus {
       outline: none;
       border-color: #7c3aed;
-      background: #ffffff;
-      box-shadow: 0 0 0 1px #ddd6fe;
+      background: #eef2ff;
+      box-shadow:
+        inset 0 2px 6px rgba(15, 23, 42, 0.28),
+        inset 0 0 0 1px rgba(129, 140, 248, 0.9);
     }
 
     .primary-btn {
@@ -408,13 +613,42 @@
       box-shadow: 0 6px 14px rgba(148, 163, 184, 0.4);
     }
 
-    .rank-row {
-      margin-top: 8px;
+    .buttons-row {
       display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn-half {
+      flex: 1;
+      margin-top: 0;
+    }
+
+    .secondary-btn {
+      background: #ffffff;
+      color: #7c3aed;
+      box-shadow: 0 4px 10px rgba(148, 163, 184, 0.35);
+      border: 1px solid #e5e7ff;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .hint-btn {
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 11px;
+      background: #f1f5f9;
+      color: #0f172a;
+      border: 1px dashed #94a3b8;
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 6px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .hint-btn span.icon {
+      font-size: 13px;
     }
 
     .rank-text {
@@ -422,6 +656,11 @@
       color: #4b5563;
     }
     .rank-text b { color: #8b5cf6; }
+
+    .rank-text-bottom {
+      margin-top: 6px;
+      text-align: right;
+    }
 
     .footer-tip {
       padding: 6px 14px 10px;
@@ -436,14 +675,94 @@
     }
     .footer-tip b { color: #7c3aed; }
 
+    /* ===== پاپ‌آپ‌ها ===== */
+
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.78);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .popup-card {
+      max-width: 360px;
+      width: 100%;
+      background: linear-gradient(145deg, #ffffff, #f5f3ff);
+      border-radius: 24px;
+      padding: 16px 16px 18px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.6);
+      text-align: center;
+      border: 1px solid #e5e7ff;
+    }
+
+    .popup-img {
+      width: 100%;
+      max-width: 260px;
+      margin: 0 auto 10px;
+      display: block;
+      border-radius: 20px;
+    }
+
+    .popup-text {
+      font-size: 13px;
+      color: #111827;
+      line-height: 1.9;
+      margin-bottom: 8px;
+    }
+
+    .popup-btn {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    /* پاپ‌آپ نام */
+
+    .name-input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7ff;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* خلاصه */
+
+    .summary-list {
+      font-size: 12px;
+      text-align: right;
+      line-height: 1.8;
+      margin-top: 6px;
+      color: #111827;
+    }
+
+    /* انیمیشن قهرمانی */
+
+    @keyframes winGlow {
+      0%   { transform: scale(1);   box-shadow: 0 0 0 rgba(250, 204, 21, 0.0); }
+      50%  { transform: scale(1.02); box-shadow: 0 0 40px rgba(250, 204, 21, 0.9); }
+      100% { transform: scale(1);   box-shadow: 0 0 0 rgba(250, 204, 21, 0.0); }
+    }
+
+    .win-glow {
+      animation: winGlow 1.2s ease-in-out infinite;
+      border: 2px solid var(--gold) !important;
+    }
+
     @media (max-width: 640px) {
       .app-header { padding-inline: 12px; }
       .main { padding-inline: 10px; }
       .middle-row { gap: 8px; }
       .tavita-wrapper { width: 120px; }
       .tavita-bubble { max-width: 190px; }
-      .rank-row { flex-direction: column-reverse; align-items: stretch; }
-      .rank-row .primary-btn { width: 100%; }
+      .header-main { align-items: flex-start; }
+      .mode-box { min-width: 100px; }
     }
   </style>
 </head>
@@ -461,13 +780,27 @@
           <div class="subtitle-dot"></div>
           <span>از حروف یک کلمه، چند کلمه بساز!</span>
         </div>
+        <div class="header-buttons-row">
+          <button id="helpBtn" class="summary-btn" type="button">
+            📘 راهنمای بازی
+          </button>
+          <button id="summaryBtn" class="summary-btn" type="button">
+            خلاصهٔ پیشرفت
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="header-side">
-      <span>مرحله‌ای و جذاب</span>
-      <span>هر مرحله سخت‌تر</span>
-      <span>برای تقویت خلاقیت و کلمات</span>
+    <div class="header-controls">
+      <button id="soundToggle" class="sound-btn" type="button">
+        <div id="soundIndicator" class="sound-indicator"></div>
+        <span id="soundLabel">صدا روشن است</span>
+      </button>
+      <div class="header-side">
+        <span>مرحله‌ای و جذاب</span>
+        <span>هر مرحله سخت‌تر</span>
+        <span>برای تقویت خلاقیت و کلمات</span>
+      </div>
     </div>
   </header>
 
@@ -476,6 +809,23 @@
     <section class="game-card">
       <div class="top-row">
         <div class="score-text">امتیاز: <b id="scoreText">0</b></div>
+
+        <div class="record-pill">
+          مرحله <b id="recordLevel">0</b> | امتیاز <b id="recordScore">0</b>
+        </div>
+
+        <div class="mode-box">
+          <button id="modeToggleBtn" class="mode-btn" type="button">
+            🎮 مود عادی
+          </button>
+          <div id="timerLabel" class="timer-label hidden">
+            ⏱️ زمان: 0 ثانیه
+          </div>
+          <div id="modeHint" class="mode-hint">
+            امتیاز ۲برابر
+          </div>
+        </div>
+
         <div class="level-pill">
           مرحله
           <strong id="levelNumber">1</strong>
@@ -484,17 +834,31 @@
         </div>
       </div>
 
-      <div class="game-title">
-        <span>🎯</span>
-        <span>بازی کلمات – ببین چند تا کلمه می‌تونی بسازی؟</span>
+      <div id="comboPill" class="combo-pill">
+        🔥 کامبو ×<span id="comboValue">1</span>
       </div>
 
-      <p class="rule-text">
-     🔸با حروف داده‌شده کلمه بساز!
-🔹تعداد کلمات لازم برای رفتن به مرحله بعد مشخصه. 
-🔸هر ۱۵ مرحله، بازی سخت‌تر می‌شه! 
-🔹به مرحله ۵۷ رسیدی، تصویرش رو برای طاویتا بفرست… جایزهٔ بزرگ منتظرته! 🎁🔥
-      </p>
+      <div class="rank-bar">
+        <span>رنک:</span>
+        <div class="rank-steps">
+          <div id="rankStep1" class="rank-step"></div>
+          <div id="rankStep2" class="rank-step"></div>
+          <div id="rankStep3" class="rank-step"></div>
+          <div id="rankStep4" class="rank-step"></div>
+        </div>
+      </div>
+      <div class="rank-labels">
+        <span>شاگرد</span>
+        <span>استاد</span>
+        <span>استادبزرگ</span>
+        <span>افسانه‌ای</span>
+      </div>
+
+      <!-- ماموریت -->
+      <div id="missionLine" class="mission-line">
+        <span class="mission-badge" id="missionBadge">ماموریت این بخش</span>
+        <span id="missionText">سعی کن این بخش را بدون هیچ اشتباهی رد کنی.</span>
+      </div>
 
       <!-- طاویتا + ستون بازی -->
       <div class="middle-row">
@@ -508,7 +872,7 @@
           <img
             id="tavitaImage"
             class="tavita-img"
-            src="https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png"
+            src="https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-11-48-385.png"
             alt="کاراکتر طاویتا"
           />
         </div>
@@ -532,7 +896,7 @@
               </button>
             </div>
             <div id="baseWordLetters" class="base-letters"></div>
-            <div id="levelGoal" class="level-goal">باید حداقل <b>۲</b> کلمهٔ درست پیدا کنی.</div>
+            <div id="levelGoal" class="level-goal">باید <b>۲</b> کلمهٔ درست پیدا کنی.</div>
             <div id="statusText" class="status-text"></div>
           </div>
         </div>
@@ -545,20 +909,31 @@
         placeholder="کلمه‌ای که ساختی را اینجا بنویس و روی «ثبت کلمه» بزن..."
       />
 
-      <button id="checkBtn" class="primary-btn" type="button">
-        <span>➕</span>
-        <span>ثبت کلمه</span>
-      </button>
+      <div class="buttons-row">
+        <button id="checkBtn" class="primary-btn btn-half" type="button">
+          <span>➕</span>
+          <span>ثبت کلمه</span>
+        </button>
 
-      <div class="rank-row">
-        <div id="rankText" class="rank-text">
-          اگر همهٔ مراحل فعلی را رد کنی، <b>استاد کلمات طاویتا</b> می‌شوی 😉
-        </div>
-        <button id="nextBtn" class="primary-btn" type="button" disabled>
+        <button id="nextBtn" class="primary-btn btn-half" type="button" disabled>
           <span>▶️</span>
           <span>مرحله بعد</span>
         </button>
       </div>
+
+      <button id="hintBtn" class="hint-btn" type="button">
+        <span class="icon">💡</span>
+        <span id="hintText">راهنما (۵ امتیاز کم می‌شود)</span>
+      </button>
+
+      <div id="rankText" class="rank-text rank-text-bottom">
+        اگر همهٔ مراحل فعلی را رد کنی، <b>استاد کلمات طاویتا</b> می‌شوی 😉
+      </div>
+
+      <!-- شروع از اول بازی -->
+      <button id="resetBtn" class="primary-btn secondary-btn" type="button">
+        🔄 شروع از اول بازی
+      </button>
     </section>
   </main>
 
@@ -570,85 +945,245 @@
   </footer>
 </div>
 
+<!-- ===== پاپ‌آپ‌های مراحل ===== -->
+<div id="popupOverlay" class="popup-overlay" style="display:none;">
+  <div class="popup-card">
+    <img id="popupImage" class="popup-img" src="" alt="پیام مرحله طاویتا" />
+    <p id="popupText" class="popup-text"></p>
+    <button
+      id="popupBtn"
+      class="primary-btn popup-btn"
+      type="button"
+    >
+      <span id="popupBtnLabel">باشه، بزن بریم 🚀</span>
+    </button>
+  </div>
+</div>
+
+<!-- پاپ‌آپ نام بازیکن -->
+<div id="nameOverlay" class="popup-overlay" style="display:none;">
+  <div class="popup-card">
+    <p class="popup-text">
+      خوش اومدی به بازی کلمات طاویتا 💜<br>
+      اسمت رو بگو تا توی بازی با همون صدا بزنمت:
+    </p>
+    <input
+      id="playerNameInput"
+      class="name-input"
+      type="text"
+      maxlength="20"
+      placeholder="مثلاً الهه"
+    />
+    <button id="saveNameBtn" class="primary-btn popup-btn" type="button">
+      تایید نام ✅
+    </button>
+  </div>
+</div>
+
+<!-- پاپ‌آپ خلاصه پیشرفت -->
+<div id="summaryOverlay" class="popup-overlay" style="display:none;">
+  <div class="popup-card">
+    <p class="popup-text">
+      خلاصهٔ پیشرفتت تا الان:
+    </p>
+    <div class="summary-list">
+      <div>نام بازیکن: <b id="summaryName">-</b></div>
+      <div>مرحلهٔ فعلی: <b id="summaryLevel">-</b></div>
+      <div>امتیاز فعلی: <b id="summaryScore">-</b></div>
+      <div>تعداد کل کلماتی که ثبت کردی: <b id="summaryWords">-</b></div>
+      <div>بیشترین کامبویی که داشتی: <b id="summaryBestCombo">-</b></div>
+      <div>بهترین رکورد: مرحله <b id="summaryBestLevel">-</b> | امتیاز <b id="summaryBestScore">-</b></div>
+    </div>
+    <button id="summaryCloseBtn" class="primary-btn popup-btn" type="button">
+      باشه، ادامه بدم 🎯
+    </button>
+  </div>
+</div>
+
+<!-- پاپ‌آپ راهنمای بازی -->
+<div id="helpOverlay" class="popup-overlay" style="display:none;">
+  <div class="popup-card">
+    <p class="popup-text">
+      🎯 <b>راهنمای سریع بازی کلمات طاویتا</b><br><br>
+      🔸 با حروف کلمهٔ اصلی، کلمات جدید بساز.<br>
+      🔹 تعداد کلمات لازم برای رفتن به مرحله بعد، زیر کلمهٔ اصلی نوشته شده.<br>
+      🔸 هر ۱۵ مرحله، بازی سخت‌تر می‌شود و رَنک تو عوض می‌شود (شاگرد → استاد → استادبزرگ → افسانه‌ای).<br>
+      🔹 اگر جایی گیر کردی، دکمهٔ 💡 راهنما کمکت می‌کند؛ فقط حواست باشد ۵ امتیاز ازت کم می‌شود.<br>
+      🔹 می‌تونی دکمهٔ «مود زمان‌دار» بالا را فعال کنی؛ فقط قبل از ثبت اولین کلمه و در هر مرحله یک‌بار می‌تونی فعالش کنی. در این حالت برای هر مرحله به ازای هر کلمه ۱۰ ثانیه وقت داری و امتیازهایی که می‌گیری دوبرابر حساب می‌شود ⏱️🔥<br>
+      🔹 اگر تا مرحلهٔ ۶۰ برسی، قهرمان بازی می‌شی؛ از صفحهٔ بازی اسکرین بگیر و برای طاویتا بفرست… جایزهٔ بزرگ منتظرته 🎁🔥
+    </p>
+    <button id="helpCloseBtn" class="primary-btn popup-btn" type="button">
+      فهمیدم، بریم بازی کنیم 🎮
+    </button>
+  </div>
+</div>
+
+<!-- صداهای افکت کوتاه -->
+<audio id="soundClick"   src="https://cdnfa.com/irangiah/a9be/uploads/tavita/ui-click-97915.mp3" preload="auto"></audio>
+<!-- دکمه ثبت کلمه (دیلینگ) -->
+<audio id="soundCorrect" src="https://cdnfa.com/irangiah/a9be/uploads/tavita/level-up-191997.mp3" preload="auto"></audio>
+<!-- مرحله بعد -->
+<audio id="soundLevelUp" src="https://cdnfa.com/irangiah/a9be/uploads/tavita/success-1-6297.mp3" preload="auto"></audio>
+<!-- قهرمان شدن -->
+<audio id="soundFinal"   src="https://cdnfa.com/irangiah/a9be/uploads/tavita/success-fanfare-trumpets-6185.mp3" preload="auto"></audio>
+
+<audio id="soundTimer"   src="https://cdnfa.com/irangiah/a9be/uploads/new6/new7/analog-timer-74998.mp3" preload="auto" loop></audio>
+<audio id="soundNoWord"  src="https://cdnfa.com/irangiah/a9be/uploads/new6/new7/elevenlabs-2025-11-16t04-57-46-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+
+<!-- صداهای گوینده (الهه) -->
+<audio id="voiceIntro"      src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-37-50-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceLevelDone"  src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-27-15-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceRestart"    src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-35-11-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceCantBuild"  src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-24-27-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceNextLevel"  src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-32-57-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceTimeUp"     src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-31-19-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceRepeat"     src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-26-25-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceModeOn"     src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-30-13-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+<audio id="voiceChampion"   src="https://cdnfa.com/irangiah/a9be/uploads/new6/new9/elevenlabs-2025-11-16t05-39-34-mark-convoai-pvc-sp100-s50-sb75-v3.mp3" preload="auto"></audio>
+
 <script>
-  const TAVITA_IMAGES = {
-    explainFancy: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-16-26-209.png",
-    medal: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-12-570.png",
-    sad: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-14-57-50-229.png",
-    explainSimple: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-13-15-57-05-527.png",
-    letters: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-13-56-364.png",
-    clap: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-07-15-32-972.png",
-    proud: "https://cdnfa.com/irangiah/a9be/uploads/tavita/picsart-25-11-14-13-06-30-637.png",
+  // ست‌های کاراکتر بر اساس رَنک + عکس جابه‌جایی
+  const TAVITA_SETS = {
+    student: {
+      explain: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-11-48-385.png",
+      clap:    "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-55-01-893.png",
+      medal:   "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-54-36-751.png",
+      sad:     "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-55-31-486.png",
+      shuffle: "https://cdnfa.com/irangiah/a9be/uploads/new6/new7/picsart-25-11-16-07-01-53-612.png"
+    },
+    master: {
+      explain: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-12-18-450.png",
+      clap:    "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-36-511.png",
+      medal:   "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-56-14-607.png",
+      sad:     "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-55-52-957.png",
+      shuffle: "https://cdnfa.com/irangiah/a9be/uploads/new6/new7/picsart-25-11-16-07-04-56-352.png"
+    },
+    grand: {
+      explain: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-12-45-646.png",
+      clap:    "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-59-27-132.png",
+      medal:   "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-58-46-211.png",
+      sad:     "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-58-03-525.png",
+      shuffle: "https://cdnfa.com/irangiah/a9be/uploads/new6/new7/picsart-25-11-16-07-03-48-496.png"
+    },
+    legend: {
+      explain: "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-05-13-10-261.png",
+      clap:    "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-02-26-146.png",
+      medal:   "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-04-13-059.png",
+      sad:     "https://cdnfa.com/irangiah/a9be/uploads/new6/picsart-25-11-16-06-01-08-979.png",
+      shuffle: "https://cdnfa.com/irangiah/a9be/uploads/new6/new7/picsart-25-11-16-07-06-12-061.png"
+    }
+  };
+
+  const POPUPS = {
+    intro: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-57-40-095.png",
+      text: "به بازی خوش اومدی 💜 الان شاگرد کلمات طاویتا هستی. این مرحله رو رد کنی، استاد کلمات طاویتا می‌شی!"
+    },
+    stage1: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-58-08-424.png",
+      text: "تبریک می‌گم 🎉 شما استاد کلمات طاویتا شدی. تلاش کن تا به استاد بزرگی برسی!"
+    },
+    stage2: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-58-47-930.png",
+      text: "تبریک می‌گم 🎉 شما الان استاد بزرگ کلمات طاویتا هستی... تلاش کن که بشی استاد افسانه‌ای کلمات طاویتا!"
+    },
+    stage3: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-17-59-31-841.png",
+      text: "تبریک 🎉 شما استاد افسانه‌ای کلمات طاویتا شدی. تلاش کن که قهرمان بازی کلمات طاویتا بشی!"
+    },
+    final: {
+      img: "https://cdnfa.com/irangiah/a9be/uploads/tavillgo/picsart-25-11-14-18-00-12-353.png",
+      text: "بسیار تبریک می‌گم 🎉 شما قهرمان بازی کلمات طاویتا شدی! از این صفحه عکس بگیر و برای ادمین کانال طاویتا بفرست و جایزهٔ بزرگ رو بگیر 😍🎁"
+    }
   };
 
   const levels = [
-  { base: "هوش", answers: ["شو", "هوش"], needed: 2 },
-  { base: "محتوا", answers: ["محتوا", "اتو"], needed: 2 },
-  { base: "مهربانی", answers: ["بار", "نام"], needed: 2 },
-  { base: "دوستانه", answers: ["دوست", "نود"], needed: 2 },
-  { base: "صداقت", answers: ["صد", "دقت"], needed: 2 },
-  { base: "شکوفایی", answers: ["شیک", "کفش"], needed: 2 },
-  { base: "همدلانه", answers: ["دل", "نام"], needed: 2 },
-  { base: "فروتنانه", answers: ["تن", "نان"], needed: 2 },
-  { base: "پیروزمندانه", answers: ["پیر", "زند"], needed: 2 },
-  { base: "شادمانی", answers: ["شاد", "دانا"], needed: 2 },
-  { base: "میهمان‌نوازی", answers: ["نام", "زمان"], needed: 2 },
-  { base: "دلاورمردان", answers: ["دل", "مرد"], needed: 2 },
-  { base: "خوش‌بختانه", answers: ["خوب", "شبانه"], needed: 2 },
-  { base: "انسان‌دوستی", answers: ["دست", "سود"], needed: 2 },
-  { base: "طاویتا", answers: ["ایتا", "تاو"], needed: 2 },
-  { base: "هوش مصنوعی", answers: ["شیوع", "موش", "صنع"], needed: 3 },
-  { base: "تولید محتوا", answers: ["تولد", "توحید", "حوا"], needed: 3 },
-  { base: "مهربانی", answers: ["بهار", "مانی", "مهر"], needed: 3 },
-  { base: "دوستانه", answers: ["دانه", "ستون", "سوته"], needed: 3 },
-  { base: "صداقت", answers: ["صدا", "قات", "تصدق"], needed: 3 },
-  { base: "شکوفایی", answers: ["کوفی", "شوک", "کشف"], needed: 3 },
-  { base: "همدلانه", answers: ["همه", "دلم", "مانه"], needed: 3 },
-  { base: "فروتنانه", answers: ["فرو", "تنور", "نفرت"], needed: 3 },
-  { base: "پیروزمندانه", answers: ["پیروز", "زنده", "مردن"], needed: 3 },
-  { base: "شادمانی", answers: ["شان", "دامن", "مانی"], needed: 3 },
-  { base: "میهمان‌نوازی", answers: ["میهمان", "نوازی", "نماز"], needed: 3 },
-  { base: "دلاورمردان", answers: ["دلاور", "مردان", "درمان"], needed: 3 },
-  { base: "خوش‌بختانه", answers: ["خوشه", "بخت", "ختنه"], needed: 3 },
-  { base: "انسان‌دوستی", answers: ["انسان", "دوست", "ستون"], needed: 3 },
-  { base: "طاویتا", answers: ["طاو", "تاو", "ایت"], needed: 3 },
-  { base: "هوش مصنوعی", answers: ["شمع", "ویژه", "نوع", "عشق"], needed: 4 },
-  { base: "تولید محتوا", answers: ["محتوا", "دوتا", "تحویل", "تولد"], needed: 4 },
-  { base: "مهربانی", answers: ["مهربان", "بها", "مهران", "نهار"], needed: 4 },
-  { base: "دوستانه", answers: ["دستان", "دوستان", "ستاده", "نواده"], needed: 4 },
-  { base: "صداقت", answers: ["صادق", "صدق", "تصدق", "قصد"], needed: 4 },
-  { base: "شکوفایی", answers: ["شکوفا", "کشویی", "فیش", "شیفو"], needed: 4 },
-  { base: "همدلانه", answers: ["همدل", "دهانه", "مهندل", "نامه"], needed: 4 },
-  { base: "فروتنانه", answers: ["فروتن", "نفرات", "تنوره", "نوا"], needed: 4 },
-  { base: "پیروزمندانه", answers: ["پیروز", "زنانه", "مردانه", "پیرامون"], needed: 4 },
-  { base: "شادمانی", answers: ["شادمان", "دانی", "نمایش", "شیدا"], needed: 4 },
-  { base: "میهمان‌نوازی", answers: ["میهمانی", "میهن", "زمانی", "نمایان"], needed: 4 },
-  { base: "دلاورمردان", answers: ["دلاورمرد", "مردا", "درامد", "نامدار"], needed: 4 },
-  { base: "خوش‌بختانه", answers: ["خوشبخت", "بختانه", "ختنه", "نشت"], needed: 4 },
-  { base: "انسان‌دوستی", answers: ["دوستان", "انسانی", "داستان", "نیستان"], needed: 4 },
-  { base: "طاویتا", answers: ["ایت", "ای", "طوا", "طاو"], needed: 4 },
-  { base: "هوش مصنوعی", answers: ["شوم", "صنم", "مصنوعی", "هوش مصنوعی", "هوش", "موش"], needed: 6 },
-  { base: "تولید محتوا", answers: ["تحمل", "تحمیل", "محتا", "اولویت", "تولید محتوا", "ولادت"], needed: 6 },
-  { base: "مهربانی", answers: ["مهران", "مهر", "مربا", "بهین", "مهربانی", "بیمار"], needed: 6 },
-  { base: "دوستانه", answers: ["دسته", "نود", "دوستانه", "دونه", "دوسه", "ستون"], needed: 6 },
-  { base: "صداقت", answers: ["صدق", "صداقت", "تصدق", "صادق", "قاصد", "دقت"], needed: 6 },
-  { base: "شکوفایی", answers: ["شکوفایی", "کشو", "شکاف", "کیفی", "شفا", "کشف"], needed: 6 },
-  { base: "همدلانه", answers: ["همدلانه", "همدل", "لانه", "دل", "دهان", "هلند"], needed: 6 },
-  { base: "فروتنانه", answers: ["فروتنانه", "فروت", "فروتن", "تنها", "نوار", "نفرات"], needed: 6 },
-  { base: "پیروزمندانه", answers: ["پیروزمند", "پیروزمندانه", "پیروز", "پردازنده", "رهنمود", "پیران"], needed: 6 },
-  { base: "شادمانی", answers: ["شادمانی", "نمایش", "دانش", "اشیا", "امان", "نما"], needed: 6 },
-  { base: "میهمان‌نوازی", answers: ["میهمان‌نوازی", "نهان", "میهنی", "ناز", "هیزم", "زمینه"], needed: 6 },
-  { base: "دلاورمردان", answers: ["دلاورمردان", "درماند", "لار", "مردار", "دراوردن", "نامرد"], needed: 6 },
-  { base: "خوش‌بختانه", answers: ["خوش‌بختانه", "توان", "شوت", "شانه", "شنا", "خشونت"], needed: 6 },
-  { base: "انسان‌دوستی", answers: ["انسان‌دوستی", "دوستان", "نوسانات", "استوا", "داستان", "دانستنی"], needed: 6 },
-  { base: "طاویتا", answers: ["طاویتا", "طاو", "تاو", "ایت", "ای", "اوات"], needed: 6 },
-];
+    { base: "هوش", answers: ["شو", "هوش"], needed: 2 },
+    { base: "محتوا", answers: ["محتوا", "اتو"], needed: 2 },
+    { base: "مهربانی", answers: ["بار", "نام"], needed: 2 },
+    { base: "دوستانه", answers: ["دوست", "نود"], needed: 2 },
+    { base: "صداقت", answers: ["صد", "دقت"], needed: 2 },
+    { base: "شکوفایی", answers: ["شیک", "کفش"], needed: 2 },
+    { base: "همدلانه", answers: ["دل", "نام"], needed: 2 },
+    { base: "فروتنانه", answers: ["تن", "نان"], needed: 2 },
+    { base: "پیروزمندانه", answers: ["پیر", "زند"], needed: 2 },
+    { base: "شادمانی", answers: ["شاد", "دانا"], needed: 2 },
+    { base: "میهمان‌نوازی", answers: ["نام", "زمان"], needed: 2 },
+    { base: "دلاورمردان", answers: ["دل", "مرد"], needed: 2 },
+    { base: "خوش‌بختانه", answers: ["خوب", "شبانه"], needed: 2 },
+    { base: "انسان‌دوستی", answers: ["دست", "سود"], needed: 2 },
+    { base: "طاویتا", answers: ["ایتا", "تاو"], needed: 2 },
+
+    { base: "هوش مصنوعی", answers: ["شیوع", "موش", "صنع"], needed: 3 },
+    { base: "تولید محتوا", answers: ["تولد", "توحید", "حوا"], needed: 3 },
+    { base: "مهربانی", answers: ["بهار", "مانی", "مهر"], needed: 3 },
+    { base: "دوستانه", answers: ["دانه", "ستون", "سوته"], needed: 3 },
+    { base: "صداقت", answers: ["صدا", "قات", "تصدق"], needed: 3 },
+    { base: "شکوفایی", answers: ["کوفی", "شوک", "کشف"], needed: 3 },
+    { base: "همدلانه", answers: ["همه", "دلم", "مانه"], needed: 3 },
+    { base: "فروتنانه", answers: ["فرو", "تنور", "نفرت"], needed: 3 },
+    { base: "پیروزمندانه", answers: ["پیروز", "زنده", "مردن"], needed: 3 },
+    { base: "شادمانی", answers: ["شان", "دامن", "مانی"], needed: 3 },
+    { base: "میهمان‌نوازی", answers: ["میهمان", "نوازی", "نماز"], needed: 3 },
+    { base: "دلاورمردان", answers: ["دلاور", "مردان", "درمان"], needed: 3 },
+    { base: "خوش‌بختانه", answers: ["خوشه", "بخت", "ختنه"], needed: 3 },
+    { base: "انسان‌دوستی", answers: ["انسان", "دوست", "ستون"], needed: 3 },
+    { base: "طاویتا", answers: ["طاو", "تاو", "یت"], needed: 3 },
+
+    { base: "هوش مصنوعی", answers: ["شمع", "ویژه", "نوع", "عشق"], needed: 4 },
+    { base: "تولید محتوا", answers: ["محتوا", "دوتا", "تحویل", "تولد"], needed: 4 },
+    { base: "مهربانی", answers: ["مهربان", "بها", "مهران", "نهار"], needed: 4 },
+    { base: "دوستانه", answers: ["دستان", "دوستان", "ستاده", "نواده"], needed: 4 },
+    { base: "صداقت", answers: ["صادق", "صدق", "تصدق", "قصد"], needed: 4 },
+    { base: "شکوفایی", answers: ["شکوفا", "کشویی", "فیش", "شیفو"], needed: 4 },
+    { base: "همدلانه", answers: ["همدل", "دهانه", "مهندل", "نامه"], needed: 4 },
+    { base: "فروتنانه", answers: ["فروتن", "نفرات", "تنوره", "نوا"], needed: 4 },
+    { base: "پیروزمندانه", answers: ["پیروز", "زنانه", "مردانه", "پیرامون"], needed: 4 },
+    { base: "شادمانی", answers: ["شادمان", "دانی", "نمایش", "شیدا"], needed: 4 },
+    { base: "میهمان‌نوازی", answers: ["میهمانی", "میهن", "زمانی", "نمایان"], needed: 4 },
+    { base: "دلاورمردان", answers: ["دلاورمرد", "مردا", "درامد", "نامدار"], needed: 4 },
+    { base: "خوش‌بختانه", answers: ["خوشبخت", "بختانه", "ختنه", "نشت"], needed: 4 },
+    { base: "انسان‌دوستی", answers: ["دوستان", "انسانی", "داستان", "نیستان"], needed: 4 },
+    { base: "طاویتا", answers: ["ایت", "ای", "طوا", "طاو"], needed: 4 },
+
+    { base: "هوش مصنوعی", answers: ["شوم", "صنم", "مصنوعی", "هوش مصنوعی", "هوش", "موش"], needed: 6 },
+    { base: "تولید محتوا", answers: ["تحمل", "تحمیل", "محتا", "اولویت", "تولید محتوا", "ولادت"], needed: 6 },
+    { base: "مهربانی", answers: ["مهران", "مهر", "مربا", "بهین", "مهربانی", "بیمار"], needed: 6 },
+    { base: "دوستانه", answers: ["دسته", "نود", "دوستانه", "دونه", "دوسه", "ستون"], needed: 6 },
+    { base: "صداقت", answers: ["صدق", "صداقت", "تصدق", "صادق", "قاصد", "دقت"], needed: 6 },
+    { base: "شکوفایی", answers: ["شکوفایی", "کشو", "شکاف", "کیفی", "شفا", "کشف"], needed: 6 },
+    { base: "همدلانه", answers: ["همدلانه", "همدل", "لانه", "دل", "دهان", "هلند"], needed: 6 },
+    { base: "فروتنانه", answers: ["فروتنانه", "فروت", "فروتن", "تنها", "نوار", "نفرات"], needed: 6 },
+    { base: "پیروزمندانه", answers: ["پیروزمند", "پیروزمندانه", "پیروز", "پردازنده", "رهنمود", "پیران"], needed: 6 },
+    { base: "شادمانی", answers: ["شادمانی", "نمایش", "دانش", "اشیا", "امان", "نما"], needed: 6 },
+    { base: "میهمان‌نوازی", answers: ["میهمان‌نوازی", "نهان", "میهنی", "ناز", "هیزم", "زمینه"], needed: 6 },
+    { base: "دلاورمردان", answers: ["دلاورمردان", "درماند", "لار", "مردار", "دراوردن", "نامرد"], needed: 6 },
+    { base: "خوش‌بختانه", answers: ["خوش‌بختانه", "توان", "شوت", "شانه", "شنا", "خشونت"], needed: 6 },
+    { base: "انسان‌دوستی", answers: ["انسان‌دوستی", "دوستان", "نوسانات", "استوا", "داستان", "دانستنی"], needed: 6 },
+    { base: "طاویتا", answers: ["طاویتا", "طاو", "تاو", "یت", "ای", "اوات"], needed: 6 }
+  ];
 
   const totalLevels = levels.length;
 
   let currentLevelIndex = 0;
   let foundWords = [];
   let score = 0;
+  let comboCount = 0;
+  let bestCombo = 0;
+  let totalWords = 0;
+  let missionDone = false;
+  let missionTextCurrent = "";
+  let missionTypeCurrent = "";
+  let missionHadMistake = false;
+  let isMuted = false;
+  let playerName = "";
+
+  // مود بازی و تایمر
+  let gameMode = "normal";
+  let timerId = null;
+  let timeLeft = 0;
+  const TIME_PER_WORD = 10;
+  let modeLocked = false;
 
   const scoreTextEl     = document.getElementById("scoreText");
   const levelNumberEl   = document.getElementById("levelNumber");
@@ -660,22 +1195,167 @@
   const checkBtn        = document.getElementById("checkBtn");
   const shuffleBtn      = document.getElementById("shuffleBtn");
   const nextBtn         = document.getElementById("nextBtn");
+  const resetBtn        = document.getElementById("resetBtn");
   const foundListEl     = document.getElementById("foundList");
   const foundCountEl    = document.getElementById("foundCount");
   const neededCountEl   = document.getElementById("neededCount");
   const tavitaImgEl     = document.getElementById("tavitaImage");
   const tavitaTextEl    = document.getElementById("tavitaText");
   const rankTextEl      = document.getElementById("rankText");
+  const popupOverlay    = document.getElementById("popupOverlay");
+  const popupImageEl    = document.getElementById("popupImage");
+  const popupTextEl     = document.getElementById("popupText");
+  const popupBtn        = document.getElementById("popupBtn");
+  const popupBtnLabel   = document.getElementById("popupBtnLabel");
+  const gameCard        = document.querySelector(".game-card");
+  const recordLevelEl   = document.getElementById("recordLevel");
+  const recordScoreEl   = document.getElementById("recordScore");
+  const comboPill       = document.getElementById("comboPill");
+  const comboValueEl    = document.getElementById("comboValue");
+  const missionBadgeEl  = document.getElementById("missionBadge");
+  const missionTextEl   = document.getElementById("missionText");
+  const hintBtn         = document.getElementById("hintBtn");
+  const soundToggleBtn  = document.getElementById("soundToggle");
+  const soundIndicator  = document.getElementById("soundIndicator");
+  const soundLabel      = document.getElementById("soundLabel");
+  const rankStep1       = document.getElementById("rankStep1");
+  const rankStep2       = document.getElementById("rankStep2");
+  const rankStep3       = document.getElementById("rankStep3");
+  const rankStep4       = document.getElementById("rankStep4");
+  const summaryBtn      = document.getElementById("summaryBtn");
+  const summaryOverlay  = document.getElementById("summaryOverlay");
+  const summaryNameEl   = document.getElementById("summaryName");
+  const summaryLevelEl  = document.getElementById("summaryLevel");
+  const summaryScoreEl  = document.getElementById("summaryScore");
+  const summaryWordsEl  = document.getElementById("summaryWords");
+  const summaryBestComboEl = document.getElementById("summaryBestCombo");
+  const summaryBestLevelEl = document.getElementById("summaryBestLevel");
+  const summaryBestScoreEl = document.getElementById("summaryBestScore");
+  const summaryCloseBtn = document.getElementById("summaryCloseBtn");
+
+  const nameOverlay     = document.getElementById("nameOverlay");
+  const playerNameInput = document.getElementById("playerNameInput");
+  const saveNameBtn     = document.getElementById("saveNameBtn");
+
+  const helpOverlay     = document.getElementById("helpOverlay");
+  const helpBtn         = document.getElementById("helpBtn");
+  const helpCloseBtn    = document.getElementById("helpCloseBtn");
+
+  const soundClick   = document.getElementById("soundClick");
+  const soundCorrect = document.getElementById("soundCorrect");
+  const soundLevelUp = document.getElementById("soundLevelUp");
+  const soundFinal   = document.getElementById("soundFinal");
+  const soundTimer   = document.getElementById("soundTimer");
+  const soundNoWord  = document.getElementById("soundNoWord");
+
+  const modeToggleBtn = document.getElementById("modeToggleBtn");
+  const timerLabel    = document.getElementById("timerLabel");
+  const modeHint      = document.getElementById("modeHint");
+
+  // صداهای گوینده
+  const voiceIntro     = document.getElementById("voiceIntro");
+  const voiceLevelDone = document.getElementById("voiceLevelDone");
+  const voiceRestart   = document.getElementById("voiceRestart");
+  const voiceCantBuild = document.getElementById("voiceCantBuild");
+  const voiceNextLevel = document.getElementById("voiceNextLevel");
+  const voiceTimeUp    = document.getElementById("voiceTimeUp");
+  const voiceRepeat    = document.getElementById("voiceRepeat");
+  const voiceModeOn    = document.getElementById("voiceModeOn");
+  const voiceChampion  = document.getElementById("voiceChampion");
 
   totalLevelsEl.textContent = totalLevels.toString();
 
-  function shuffleString(str) {
-    const arr = str.split("");
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+  function loadSoundSetting() {
+    try {
+      const raw = localStorage.getItem("tavitaWordsSoundMuted");
+      if (raw === "1") isMuted = true;
+      else isMuted = false;
+    } catch (e) {
+      isMuted = false;
     }
-    return arr.join("");
+    updateSoundUI();
+  }
+
+  function saveSoundSetting() {
+    try {
+      localStorage.setItem("tavitaWordsSoundMuted", isMuted ? "1" : "0");
+    } catch (e) {}
+  }
+
+  function updateSoundUI() {
+    if (isMuted) {
+      soundIndicator.classList.add("sound-muted");
+      soundLabel.textContent = "صدا قطع است";
+      if (soundTimer) {
+        soundTimer.pause();
+        soundTimer.currentTime = 0;
+      }
+    } else {
+      soundIndicator.classList.remove("sound-muted");
+      soundLabel.textContent = "صدا روشن است";
+    }
+  }
+
+  function playSafe(sound) {
+    if (!sound || isMuted) return;
+    try {
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    } catch (e) {}
+  }
+
+  soundToggleBtn.addEventListener("click", () => {
+    isMuted = !isMuted;
+    updateSoundUI();
+    saveSoundSetting();
+    playSafe(soundClick);
+  });
+
+  // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
+  function showPopup(key, overrideText, options) {
+    const data = POPUPS[key];
+    if (!data) return;
+    popupImageEl.src = data.img;
+    popupTextEl.innerHTML = overrideText || data.text;
+    popupBtnLabel.textContent = "باشه، بزن بریم 🚀";
+    popupOverlay.style.display = "flex";
+
+    const skipVoice = options && options.skipVoice;
+
+    if (!skipVoice) {
+      if (key === "intro") {
+        playSafe(voiceIntro);
+      } else if (key === "final") {
+        playSafe(voiceChampion);
+      }
+    }
+  }
+
+  function hidePopup() {
+    popupOverlay.style.display = "none";
+  }
+
+  if (popupBtn) {
+    popupBtn.addEventListener("click", () => {
+      playSafe(soundClick);
+      hidePopup();
+    });
+  }
+
+  function shuffleString(str) {
+    let arr = str.split("");
+    if (arr.length <= 1) return str;
+    let shuffled = str;
+    let tries = 0;
+    while (shuffled === str && tries < 20) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      shuffled = arr.join("");
+      tries++;
+    }
+    return shuffled;
   }
 
   function renderBaseWord() {
@@ -715,49 +1395,360 @@
     return w.replace(/\s+/g, "").trim();
   }
 
+  function getRankKey() {
+    const lvl = currentLevelIndex + 1;
+    if (lvl <= 15) return "student";
+    if (lvl <= 30) return "master";
+    if (lvl <= 45) return "grand";
+    return "legend";
+  }
+
+  function getCurrentSet() {
+    const key = getRankKey();
+    return TAVITA_SETS[key] || TAVITA_SETS.student;
+  }
+
   function updateRankMessage() {
     const lvl = currentLevelIndex + 1;
-    if (lvl < 5) {
+    rankStep1.classList.remove("active");
+    rankStep2.classList.remove("active");
+    rankStep3.classList.remove("active");
+    rankStep4.classList.remove("active");
+
+    if (lvl <= 15) {
+      rankStep1.classList.add("active");
       rankTextEl.innerHTML =
-        "اگر این چند مرحله را رد کنی، کم‌کم <b>شاگرد کلمات طاویتا</b> می‌شوی 😌";
-    } else if (lvl < 20) {
+        (playerName ? (playerName + "، ") : "") +
+        "الان در بخش شاگردی هستی؛ اگه این ۱۵ مرحله رو رد کنی، <b>استاد کلمات طاویتا</b> می‌شی 😌";
+    } else if (lvl <= 30) {
+      rankStep1.classList.add("active");
+      rankStep2.classList.add("active");
       rankTextEl.innerHTML =
-        "اگر همهٔ مراحل فعلی را رد کنی، یک <b>استاد کلمات طاویتا</b> واقعی می‌شوی 😉";
+        "تو بخش استادها هستی؛ تلاش کن به <b>استاد بزرگ کلمات طاویتا</b> برسی 😉";
+    } else if (lvl <= 45) {
+      rankStep1.classList.add("active");
+      rankStep2.classList.add("active");
+      rankStep3.classList.add("active");
+      rankTextEl.innerHTML =
+        "الان نزدیک شدی به <b>استاد افسانه‌ای کلمات طاویتا</b> 🤯🏆";
     } else {
+      rankStep1.classList.add("active");
+      rankStep2.classList.add("active");
+      rankStep3.classList.add("active");
+      rankStep4.classList.add("active");
       rankTextEl.innerHTML =
-        "اینجاها کم‌کم به <b>استاد بزرگ طاویتا</b> نزدیک می‌شوی 🤯🏆";
+        "کم‌کم داری به <b>قهرمان طاویتا</b> شدن نزدیک می‌شی… ادامه بده! 🔥";
     }
   }
 
   function setTavita(mode, text) {
+    const set = getCurrentSet();
+    let img = set.explain;
     switch (mode) {
-      case "shuffle": tavitaImgEl.src = TAVITA_IMAGES.letters; break;
-      case "correct": tavitaImgEl.src = TAVITA_IMAGES.clap; break;
-      case "error":   tavitaImgEl.src = TAVITA_IMAGES.sad; break;
-      case "level":   tavitaImgEl.src = TAVITA_IMAGES.medal; break;
-      case "proud":   tavitaImgEl.src = TAVITA_IMAGES.proud; break;
-      default:        tavitaImgEl.src = TAVITA_IMAGES.explainSimple;
+      case "shuffle":
+        img = set.shuffle || set.explain;
+        break;
+      case "correct":
+        img = set.clap;
+        break;
+      case "error":
+        img = set.sad;
+        break;
+      case "level":
+        img = set.medal;
+        break;
+      case "proud":
+        img = set.medal;
+        break;
+      case "neutral":
+      default:
+        img = set.explain;
     }
+    tavitaImgEl.src = img;
     if (text) tavitaTextEl.innerHTML = text;
   }
 
-  function initLevel() {
+  function updateRecord() {
+    const currLevel = currentLevelIndex + 1;
+    let rec = { bestLevel: 0, bestScore: 0 };
+    try {
+      const raw = localStorage.getItem("tavitaWordsRecord");
+      if (raw) rec = JSON.parse(raw);
+    } catch (e) {}
+    if (currLevel > (rec.bestLevel || 0)) rec.bestLevel = currLevel;
+    if (score > (rec.bestScore || 0)) rec.bestScore = score;
+    try {
+      localStorage.setItem("tavitaWordsRecord", JSON.stringify(rec));
+    } catch (e) {}
+    recordLevelEl.textContent = (rec.bestLevel || 0).toString();
+    recordScoreEl.textContent = (rec.bestScore || 0).toString();
+  }
+
+  function loadRecord() {
+    try {
+      const raw = localStorage.getItem("tavitaWordsRecord");
+      if (!raw) {
+        recordLevelEl.textContent = "0";
+        recordScoreEl.textContent = "0";
+        return;
+      }
+      const rec = JSON.parse(raw);
+      recordLevelEl.textContent = (rec.bestLevel || 0).toString();
+      recordScoreEl.textContent = (rec.bestScore || 0).toString();
+    } catch (e) {
+      recordLevelEl.textContent = "0";
+      recordScoreEl.textContent = "0";
+    }
+  }
+
+  function saveGameState() {
+    const state = {
+      currentLevelIndex,
+      score,
+      foundWords,
+      comboCount,
+      bestCombo,
+      totalWords,
+      missionDone,
+      missionTypeCurrent,
+      missionTextCurrent,
+      missionHadMistake,
+      gameMode,
+      modeLocked
+    };
+    try {
+      localStorage.setItem("tavitaWordsState", JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function loadGameState() {
+    try {
+      const raw = localStorage.getItem("tavitaWordsState");
+      if (!raw) return false;
+      const st = JSON.parse(raw);
+      if (typeof st.currentLevelIndex === "number" &&
+          st.currentLevelIndex >= 0 &&
+          st.currentLevelIndex < levels.length) {
+        currentLevelIndex   = st.currentLevelIndex;
+        score               = st.score || 0;
+        foundWords          = Array.isArray(st.foundWords) ? st.foundWords : [];
+        comboCount          = st.comboCount || 0;
+        bestCombo           = st.bestCombo || 0;
+        totalWords          = st.totalWords || 0;
+        missionDone         = !!st.missionDone;
+        missionTypeCurrent  = st.missionTypeCurrent || "";
+        missionTextCurrent  = st.missionTextCurrent || "";
+        missionHadMistake   = !!st.missionHadMistake;
+        gameMode            = st.gameMode || "normal";
+        modeLocked          = !!st.modeLocked;
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function clearGameState() {
+    try {
+      localStorage.removeItem("tavitaWordsState");
+    } catch (e) {}
+  }
+
+  function loadPlayerName() {
+    try {
+      const raw = localStorage.getItem("tavitaPlayerName");
+      if (raw) playerName = raw;
+      else playerName = "";
+    } catch (e) {
+      playerName = "";
+    }
+  }
+
+  function savePlayerName() {
+    try {
+      localStorage.setItem("tavitaPlayerName", playerName);
+    } catch (e) {}
+  }
+
+  function showNamePopupIfNeeded() {
+    if (!playerName) {
+      nameOverlay.style.display = "flex";
+      playerNameInput.value = "";
+      playerNameInput.focus();
+    }
+  }
+
+  function updateMissionForLevel() {
+    const lvl = currentLevelIndex + 1;
+    missionDone = false;
+    missionHadMistake = false;
+
+    if (lvl <= 15) {
+      missionTypeCurrent = "noMistake";
+      missionTextCurrent = "سعی کن این بخش را بدون هیچ اشتباهی رد کنی.";
+    } else if (lvl <= 30) {
+      missionTypeCurrent = "len4";
+      missionTextCurrent = "حداقل یک کلمهٔ ۴ حرفی هم پیدا کن.";
+    } else if (lvl <= 45) {
+      missionTypeCurrent = "len5";
+      missionTextCurrent = "حداقل یک کلمهٔ ۵ حرفی هم پیدا کن.";
+    } else {
+      missionTypeCurrent = "combo3";
+      missionTextCurrent = "سعی کن یک بار کامبوی ۳تایی یا بیشتر بزنی.";
+    }
+
+    missionTextEl.textContent = missionTextCurrent;
+    missionBadgeEl.classList.remove("mission-done");
+    missionBadgeEl.textContent = "ماموریت این بخش";
+  }
+
+  function checkMissionOnCorrectWord(word) {
+    const len = word.length;
+    if (missionDone) return;
+
+    if (missionTypeCurrent === "noMistake") {
+      if (!missionHadMistake && foundWords.length + 1 >= levels[currentLevelIndex].needed) {
+        missionDone = true;
+      }
+    } else if (missionTypeCurrent === "len4") {
+      if (len >= 4) missionDone = true;
+    } else if (missionTypeCurrent === "len5") {
+      if (len >= 5) missionDone = true;
+    } else if (missionTypeCurrent === "combo3") {
+      if (comboCount + 1 >= 3) missionDone = true;
+    }
+
+    if (missionDone) {
+      missionBadgeEl.classList.add("mission-done");
+      missionBadgeEl.textContent = "ماموریت انجام شد ✅";
+      setTavita("correct", "ماموریت مخفی این بخش رو هم انجام دادی! مغز طلایی 😎✨");
+    }
+  }
+
+  // تایمر مود زمان‌دار
+  function updateTimerLabel() {
+    timerLabel.textContent = `⏱️ زمان: ${timeLeft} ثانیه`;
+  }
+
+  function clearTimer() {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+    timerLabel.classList.add("hidden");
+    if (soundTimer) {
+      soundTimer.pause();
+      soundTimer.currentTime = 0;
+    }
+  }
+
+  function handleTimeOver() {
+    missionHadMistake = true;
+    breakComboOnError();
+    if (score >= 10) {
+      score -= 10;
+      scoreTextEl.textContent = score.toString();
+    }
+    foundWords = [];
+    renderFoundWords();
+    setStatus("زمان تموم شد! این مرحله از اول شروع شد ⏱️", "err");
+    setTavita("error", "اوه، زمان تموم شد! بیا یک بار دیگه از اول این مرحله رو بزنیم 😉");
+    playSafe(voiceTimeUp);
+    saveGameState();
+  }
+
+  function startLevelTimer() {
+    clearTimer();
+    const level = levels[currentLevelIndex];
+    const needed = level.needed || 1;
+    timeLeft = needed * TIME_PER_WORD;
+    if (timeLeft < 10) timeLeft = 10;
+
+    timerLabel.classList.remove("hidden");
+    updateTimerLabel();
+
+    if (!isMuted && soundTimer) {
+      try {
+        soundTimer.currentTime = 0;
+        soundTimer.play().catch(() => {});
+      } catch (e) {}
+    }
+
+    timerId = setInterval(() => {
+      timeLeft--;
+      if (timeLeft <= 0) {
+        timeLeft = 0;
+        updateTimerLabel();
+        clearTimer();
+        handleTimeOver();
+      } else {
+        updateTimerLabel();
+      }
+    }, 1000);
+  }
+
+  function initLevel(resetFound = true) {
     const level = levels[currentLevelIndex];
     levelNumberEl.textContent = (currentLevelIndex + 1).toString();
-    foundWords = [];
+
+    clearTimer();
+
+    if (resetFound) {
+      foundWords = [];
+      modeLocked = false;
+    } else {
+      modeLocked = foundWords.length > 0;
+    }
+
     renderFoundWords();
     scoreTextEl.textContent = score.toString();
     renderBaseWord();
     neededCountEl.textContent = level.needed.toString();
-    levelGoalEl.innerHTML = `باید حداقل <b>${level.needed}</b> کلمهٔ درست پیدا کنی.`;
-    setStatus("کلماتت را یکی‌یکی وارد کن و ثبت کن.", "");
-    wordInputEl.value = "";
-    nextBtn.disabled = true;
+    levelGoalEl.innerHTML = `باید <b>${level.needed}</b> کلمهٔ درست پیدا کنی.`;
     updateRankMessage();
-    setTavita(
-      "neutral",
-      "این مرحله تازه شروع شده؛ ببینیم از این کلمه چندتا کلمهٔ خفن درمیاری 😎✨"
-    );
+
+    comboCount = 0;
+    comboPill.classList.remove("active");
+    missionHadMistake = false;
+    updateMissionForLevel();
+
+    wordInputEl.value = "";
+
+    if (foundWords.length >= level.needed) {
+      nextBtn.disabled = false;
+      checkBtn.disabled = true;
+      setStatus("تعداد کلمه‌های لازم را قبلاً پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
+      setTavita("level", "این مرحله رو قبلاً بردی؛ اگر خواستی برو مرحله بعدی 🏅");
+    } else {
+      nextBtn.disabled = true;
+      checkBtn.disabled = false;
+      setStatus("کلماتت را یکی‌یکی وارد کن و ثبت کن.", "");
+      setTavita(
+        "neutral",
+        (playerName ? (playerName + "، ") : "") +
+        "این مرحله تازه شروع شده؛ ببینیم از این کلمه چندتا کلمهٔ خفن درمیاری 😎✨"
+      );
+    }
+
+    // وضعیت مود
+    modeToggleBtn.disabled = modeLocked;
+    if (gameMode === "timed") {
+      modeToggleBtn.textContent = "⏱️ مود زمان‌دار";
+      if (!modeLocked) {
+        startLevelTimer();
+      } else {
+        timerLabel.classList.add("hidden");
+      }
+      if (modeHint) modeHint.classList.add("hidden");
+    } else {
+      modeToggleBtn.textContent = "🎮 مود عادی";
+      clearTimer();
+      if (modeHint) {
+        if (!modeLocked) modeHint.classList.remove("hidden");
+        else modeHint.classList.add("hidden");
+      }
+    }
+
+    saveGameState();
   }
 
   function canBuildFromBase(base, word) {
@@ -773,53 +1764,126 @@
     return true;
   }
 
+  function applyComboAndScore(baseIncrement) {
+    comboCount += 1;
+    if (comboCount > bestCombo) bestCombo = comboCount;
+
+    let factor = 1;
+    if (comboCount >= 5) factor = 3;
+    else if (comboCount >= 3) factor = 2;
+
+    const gained = baseIncrement * factor;
+    score += gained;
+    scoreTextEl.textContent = score.toString();
+
+    if (factor > 1) {
+      comboPill.classList.add("active");
+      comboValueEl.textContent = factor.toString();
+    } else {
+      comboPill.classList.remove("active");
+    }
+  }
+
+  function breakComboOnError() {
+    comboCount = 0;
+    comboPill.classList.remove("active");
+  }
+
   function checkWord() {
+    if (checkBtn.disabled) return;
     const level = levels[currentLevelIndex];
     let w = normalizeWord(wordInputEl.value);
     if (!w) {
       setStatus("اول یک کلمه بنویس.", "err");
       setTavita("error", "هنوز چیزی ننوشتی؛ یک کلمه امتحان کن 😅");
+      missionHadMistake = true;
+      breakComboOnError();
+      playSafe(soundNoWord);
+      saveGameState();
       return;
     }
     if (w.length < 2) {
       setStatus("کلمه خیلی کوتاه است؛ حداقل ۲ حرفی باشد.", "err");
       setTavita("error", "این یکی خیلی کوتاه بود؛ یک کم طولانی‌ترش کن 🤏");
+      missionHadMistake = true;
+      breakComboOnError();
+      saveGameState();
       return;
     }
     if (!canBuildFromBase(level.base, w)) {
       setStatus("این کلمه را نمی‌توان فقط با حروف کلمهٔ اصلی ساخت.", "err");
       setTavita("error", "حروفش جور درنمیاد؛ فقط از همین حروف استفاده کن 😉");
+      missionHadMistake = true;
+      breakComboOnError();
+      playSafe(voiceCantBuild);
+      saveGameState();
       return;
     }
     const allowed = level.answers.map(normalizeWord);
     if (!allowed.includes(w)) {
       setStatus("این کلمه جزو جواب‌های این مرحله نیست؛ یکی دیگر امتحان کن.", "err");
       setTavita("error", "این یکی تو جواب‌های این مرحله نیست؛ دوباره تلاش کن 🤔");
+      missionHadMistake = true;
+      breakComboOnError();
+      saveGameState();
       return;
     }
     if (foundWords.includes(w)) {
       setStatus("این کلمه را قبلاً ثبت کردی.", "err");
       setTavita("error", "این رو قبلاً گفتی؛ یک چیز تازه بگو 😊");
+      missionHadMistake = true;
+      breakComboOnError();
+      playSafe(voiceRepeat);
+      saveGameState();
       return;
     }
 
+    // موفقیت
     foundWords.push(w);
+    totalWords += 1;
     renderFoundWords();
     wordInputEl.value = "";
     wordInputEl.focus();
-    score += 10;
-    scoreTextEl.textContent = score.toString();
+
+    // بعد از اولین کلمه، مود قفل می‌شود
+    if (foundWords.length === 1) {
+      modeLocked = true;
+      modeToggleBtn.disabled = true;
+      if (modeHint) modeHint.classList.add("hidden");
+    }
+
+    // امتیاز + کامبو (در مود زمان‌دار دوبرابر)
+    const baseInc = (gameMode === "timed" ? 20 : 10);
+    applyComboAndScore(baseInc);
+
     setStatus("آفرین! یک کلمهٔ جدید پیدا کردی 🌿", "ok");
-    setTavita("correct", "آفرین! یک کلمهٔ تازه به لیست اضافه شد 👏✨");
+    setTavita("correct",
+      (playerName ? (playerName + "، ") : "") +
+      "آفرین! یک کلمهٔ تازه به لیست اضافه شد 👏✨"
+    );
+
+    // صدای ثبت کلمهٔ درست → دیلینگ اختصاصی
+    playSafe(soundCorrect);
+    checkMissionOnCorrectWord(w);
+    saveGameState();
 
     if (foundWords.length >= level.needed) {
-      setStatus("عالی! حداقل کلمات لازم را پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
+      setStatus("عالی! تعداد کلمه‌های لازم را پیدا کردی؛ می‌توانی به مرحلهٔ بعد بروی.", "ok");
       nextBtn.disabled = false;
-      setTavita("level", "این مرحله رو ترکوندی! آماده‌ای بریم سراغ بعدی؟ 🏅");
+      checkBtn.disabled = true;
+      setTavita("level",
+        (playerName ? (playerName + "، ") : "") +
+        "این مرحله رو ترکوندی! آماده‌ای بریم سراغ بعدی؟ 🏅"
+      );
+      playSafe(voiceLevelDone);
+      updateRecord();
+      saveGameState();
     }
   }
 
-  checkBtn.addEventListener("click", checkWord);
+  checkBtn.addEventListener("click", () => {
+    checkWord();
+  });
 
   wordInputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -829,28 +1893,196 @@
   });
 
   shuffleBtn.addEventListener("click", () => {
+    playSafe(soundClick);
     renderBaseWord();
     setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
   });
 
+  hintBtn.addEventListener("click", () => {
+    const level = levels[currentLevelIndex];
+    const remaining = level.answers
+      .map(normalizeWord)
+      .filter((a) => !foundWords.includes(a));
+
+    if (remaining.length === 0) {
+      setStatus("همهٔ کلمات این مرحله را پیدا کردی؛ برو مرحله بعدی 🌟", "ok");
+      setTavita("neutral", "این مرحله رو کامل ترکوندی؛ برو بعدی ببینیم چی کار می‌کنی 😎");
+      return;
+    }
+
+    score = Math.max(0, score - 5);
+    scoreTextEl.textContent = score.toString();
+
+    const hintWord = remaining[Math.floor(Math.random() * remaining.length)];
+    let hintMsg = "";
+    if (hintWord.length >= 4) {
+      hintMsg = `راهنما: یکی از کلمات این مرحله ${hintWord.length} حرفی است و با «${hintWord[0]}» شروع می‌شود.`;
+    } else {
+      hintMsg = `راهنما: یکی از کلمات این مرحله با «${hintWord[0]}» شروع می‌شود.`;
+    }
+    setStatus(hintMsg, "ok");
+    setTavita("neutral", hintMsg + "<br>حالا خودت ادامه‌ش رو برو 😌✨");
+    playSafe(soundClick);
+    saveGameState();
+  });
+
   nextBtn.addEventListener("click", () => {
+    // صدای «مرحله بعد» + ویس مربوطه
+    playSafe(soundLevelUp);
+    playSafe(voiceNextLevel);
+    clearTimer();
     if (currentLevelIndex < levels.length - 1) {
       currentLevelIndex++;
-      initLevel();
+      initLevel(true);
+
+      if (currentLevelIndex === 15) {
+        showPopup("stage1");
+      } else if (currentLevelIndex === 30) {
+        showPopup("stage2");
+      } else if (currentLevelIndex === 45) {
+        showPopup("stage3");
+      }
     } else {
-      setStatus(
-        "تبریک! همهٔ مراحل فعلی را تمام کردی 🎉 می‌توانی صفحه را رفرش کنی و دوباره بازی کنی.",
-        "ok"
-      );
+      setStatus("تبریک! همهٔ مراحل را تمام کردی 🎉", "ok");
       setTavita(
         "proud",
-        "تو رسماً استاد کلمات طاویتا شدی! هر وقت خواستی از اول شروع کن و رکورد بزن 😎🏆"
+        (playerName ? (playerName + "، ") : "") +
+        "تو رسماً قهرمان کلمات طاویتا شدی! 😎🏆"
       );
       nextBtn.disabled = true;
+      clearGameState();
+      updateRecord();
+
+      const finalText =
+        (playerName ? (playerName + " عزیز، ") : "") +
+        "بسیار تبریک می‌گم 🎉 تو قهرمان بازی کلمات طاویتا شدی! از این صفحه (امتیاز و مرحله نهایی) عکس بگیر و برای ادمین کانال طاویتا بفرست تا جایزهٔ بزرگ رو بگیری 😍🎁";
+      popupBtnLabel.textContent = "باشه، الان اسکرین می‌گیرم 📸";
+      showPopup("final", finalText);
+      playSafe(soundFinal);
+      if (gameCard) {
+        gameCard.classList.add("win-glow");
+      }
     }
   });
 
-  initLevel();
+  resetBtn.addEventListener("click", () => {
+    // فقط صدای کلیک + ویس «بازی از اول شروع شد»
+    playSafe(soundClick);
+    playSafe(voiceRestart);
+    clearTimer();
+    currentLevelIndex = 0;
+    score = 0;
+    foundWords = [];
+    comboCount = 0;
+    bestCombo = 0;
+    totalWords = 0;
+    modeLocked = false;
+    gameMode = "normal";
+    clearGameState();
+    initLevel(true);
+    if (modeHint) modeHint.classList.remove("hidden");
+
+    // پاپ‌آپ شروع از اول بدون صدای خوش‌آمدگویی
+    showPopup(
+      "intro",
+      (playerName ? (playerName + "، ") : "") +
+      "بازی از اول شروع شد؛ بیا این بار رکورد قبلی‌ات رو هم بترکونی 💪",
+      { skipVoice: true }
+    );
+  });
+
+  // دکمه مود زمان‌دار / عادی
+  modeToggleBtn.addEventListener("click", () => {
+    if (modeLocked) {
+      playSafe(soundClick);
+      setStatus("در هر مرحله فقط قبل از ثبت اولین کلمه می‌تونی مود زمان‌دار را تغییر بدهی.", "err");
+      setTavita("error", "این مرحله شروع شده؛ برای مرحله‌های بعدی از اول تصمیم بگیر زمان‌دار باشه یا نه 😉");
+      return;
+    }
+    playSafe(soundClick);
+    if (gameMode === "normal") {
+      gameMode = "timed";
+      modeToggleBtn.textContent = "⏱️ مود زمان‌دار";
+      if (modeHint) modeHint.classList.add("hidden");
+      startLevelTimer();
+      playSafe(voiceModeOn);
+    } else {
+      gameMode = "normal";
+      modeToggleBtn.textContent = "🎮 مود عادی";
+      clearTimer();
+      if (modeHint) modeHint.classList.remove("hidden");
+    }
+    saveGameState();
+  });
+
+  // خلاصه پیشرفت
+  summaryBtn.addEventListener("click", () => {
+    playSafe(soundClick);
+    let rec = { bestLevel: 0, bestScore: 0 };
+    try {
+      const raw = localStorage.getItem("tavitaWordsRecord");
+      if (raw) rec = JSON.parse(raw);
+    } catch (e) {}
+
+    summaryNameEl.textContent = playerName || "-";
+    summaryLevelEl.textContent = (currentLevelIndex + 1).toString();
+    summaryScoreEl.textContent = score.toString();
+    summaryWordsEl.textContent = totalWords.toString();
+    summaryBestComboEl.textContent = bestCombo.toString();
+    summaryBestLevelEl.textContent = (rec.bestLevel || 0).toString();
+    summaryBestScoreEl.textContent = (rec.bestScore || 0).toString();
+
+    summaryOverlay.style.display = "flex";
+  });
+
+  summaryCloseBtn.addEventListener("click", () => {
+    playSafe(soundClick);
+    summaryOverlay.style.display = "none";
+  });
+
+  // راهنمای بازی
+  helpBtn.addEventListener("click", () => {
+    playSafe(soundClick);
+    helpOverlay.style.display = "flex";
+  });
+
+  helpCloseBtn.addEventListener("click", () => {
+    playSafe(soundClick);
+    helpOverlay.style.display = "none";
+  });
+
+  saveNameBtn.addEventListener("click", () => {
+    const name = playerNameInput.value.trim();
+    if (name) {
+      playerName = name;
+      savePlayerName();
+    }
+    nameOverlay.style.display = "none";
+    showPopup("intro",
+      `به بازی خوش اومدی ${playerName || ""} 💜 الان شاگرد کلمات طاویتا هستی. این مرحله رو رد کنی، استاد کلمات طاویتا می‌شی!`
+    );
+  });
+
+  window.onload = function () {
+    loadSoundSetting();
+    loadRecord();
+    loadPlayerName();
+
+    const hasState = loadGameState();
+    if (hasState) {
+      initLevel(false);
+    } else {
+      initLevel(true);
+    }
+
+    showNamePopupIfNeeded();
+
+    if (playerName && !hasState) {
+      showPopup("intro",
+        `به بازی خوش اومدی ${playerName} 💜 الان شاگرد کلمات طاویتا هستی. این مرحله رو رد کنی، استاد کلمات طاویتا می‌شی!`
+      );
+    }
+  };
 </script>
 </body>
 </html>
