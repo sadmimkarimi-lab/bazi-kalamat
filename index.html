@@ -765,6 +765,8 @@
       .mode-box { min-width: 100px; }
     }
   </style>
+<script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
+  
 </head>
 <body>
 <div class="app">
@@ -784,8 +786,14 @@
           <button id="helpBtn" class="summary-btn" type="button">
             📘 راهنمای بازی
           </button>
+
           <button id="summaryBtn" class="summary-btn" type="button">
             خلاصهٔ پیشرفت
+          </button>
+
+          <!-- دکمه جدید کانال طاویتا -->
+          <button id="tavitaChannelBtn" class="summary-btn" type="button">
+            کانال طاویتا
           </button>
         </div>
       </div>
@@ -2084,5 +2092,47 @@
     }
   };
 </script>
+
+
+
+
+
+<script>
+(function () {
+  const tavitaBtn = document.getElementById("tavitaChannelBtn");
+
+  function openInEitaaOrBrowser(url) {
+    if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.openEitaaLink === "function"
+    ) {
+      try {
+        window.Eitaa.WebApp.openEitaaLink(url);
+        return;
+      } catch (e) {}
+    }
+    window.location.href = url;
+  }
+
+  if (tavitaBtn) {
+    tavitaBtn.addEventListener("click", () => {
+      openInEitaaOrBrowser("https://eitaa.com/tavita");
+    });
+  }
+
+  if (window.Eitaa && window.Eitaa.WebApp) {
+    try {
+      const wa = window.Eitaa.WebApp;
+      wa.ready();
+      wa.expand();
+    } catch (e) {}
+  }
+})();
+</script>
+
+
+
+  
 </body>
 </html>
