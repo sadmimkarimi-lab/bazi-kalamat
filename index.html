@@ -135,12 +135,12 @@
       display: block;
     }
 
- .header-controls {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-}
+    .header-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
 
     .sound-btn {
       border: none;
@@ -155,25 +155,6 @@
       cursor: pointer;
     }
 
-
-
-.tavita-btn {
-  background: rgba(254, 249, 195, 0.25);
-  color: #fefce8;
-  font-size: 11px;
-  padding-inline: 10px;
-  box-shadow: 0 4px 10px rgba(250, 204, 21, 0.4);
-  border: 1px solid rgba(250, 250, 250, 0.35);
-}
-
-.tavita-btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(250, 204, 21, 0.6);
-}
-
-
-    
-    
     .sound-indicator {
       width: 7px;
       height: 7px;
@@ -784,9 +765,6 @@
       .mode-box { min-width: 100px; }
     }
   </style>
-
-<script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
-  
 </head>
 <body>
 <div class="app">
@@ -814,18 +792,17 @@
     </div>
 
     <div class="header-controls">
-  <button id="soundToggle" class="sound-btn" type="button">
-    <div id="soundIndicator" class="sound-indicator"></div>
-    <span id="soundLabel">صدا روشن است</span>
-  </button>
-
-  <!-- دکمه کانال طاویتا -->
-  <button id="tavitaChannelBtn" class="sound-btn tavita-btn" type="button">
-    <span>کانال طاویتا</span>
-  </button>
-
-  
-</div>
+      <button id="soundToggle" class="sound-btn" type="button">
+        <div id="soundIndicator" class="sound-indicator"></div>
+        <span id="soundLabel">صدا روشن است</span>
+      </button>
+      <div class="header-side">
+        <span>مرحله‌ای و جذاب</span>
+        <span>هر مرحله سخت‌تر</span>
+        <span>برای تقویت خلاقیت و کلمات</span>
+      </div>
+    </div>
+  </header>
 
   <!-- MAIN -->
   <main class="main">
@@ -2106,45 +2083,6 @@
       );
     }
   };
-
-
-
-// === کانال طاویتا + فعال‌سازی SDK ایتا ===
-(function () {
-  const tavitaBtn = document.getElementById("tavitaChannelBtn");
-
-  function openInEitaaOrBrowser(url) {
-    if (
-      window.Eitaa &&
-      window.Eitaa.WebApp &&
-      typeof window.Eitaa.WebApp.openEitaaLink === "function"
-    ) {
-      try {
-        window.Eitaa.WebApp.openEitaaLink(url);
-        return;
-      } catch (e) {}
-    }
-    window.location.href = url;
-  }
-
-  if (tavitaBtn) {
-    tavitaBtn.addEventListener("click", () => {
-      openInEitaaOrBrowser("https://eitaa.com/tavita");
-    });
-  }
-
-  // فعال‌سازی SDK
-  if (window.Eitaa && window.Eitaa.WebApp) {
-    try {
-      const wa = window.Eitaa.WebApp;
-      wa.ready();
-      wa.expand();
-    } catch (e) {}
-  }
-})();
-
-  
-  
 </script>
 </body>
 </html>
