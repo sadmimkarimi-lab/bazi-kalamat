@@ -766,6 +766,39 @@
     }
   </style>
 <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    // 1) اعلام آمادگی برنامک
+    if (window.Eitaa && window.Eitaa.WebApp) {
+        console.log("Eitaa SDK فعال است");
+
+        Eitaa.WebApp.ready();     // لازم و اجباری
+        Eitaa.WebApp.expand();    // فول‌اسکرین شدن
+
+        // 2) فعال کردن دکمه برگشت ایتا
+        const back = Eitaa.WebApp.BackButton;
+        back.show();
+
+        back.onClick(() => {
+            // بررسی: اگر پاپ‌آپ باز است → پاپ‌آپ را ببند
+            const popup = document.querySelector(".popup.active");
+            if (popup) popup.classList.remove("active");
+            else Eitaa.WebApp.close();
+        });
+
+        // 3) اگر خواستی هشدار خروج فعال باشه:
+        Eitaa.WebApp.enableClosingConfirmation();
+
+        // 4) دریافت اطلاعات کاربر
+        const user = Eitaa.WebApp.initDataUnsafe?.user;
+        console.log("User Info:", user);
+    } else {
+        console.warn("SDK در محیط غیر ایتا فعال نیست");
+    }
+
+});
+</script>
   
 </head>
 <body>
