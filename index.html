@@ -1320,42 +1320,35 @@
   });
 
 
+  
+
   // 🔙 مدیریت بک‌باتن و پاپ‌آپ‌ها
-  function anyPopupOpen() {
-    return (
-      popupOverlay.style.display === "flex" ||
-      summaryOverlay.style.display === "flex" ||
-      helpOverlay.style.display === "flex" ||
-      nameOverlay.style.display === "flex"
-    );
-  }
+function anyPopupOpen() {
+  return (
+    popupOverlay.style.display === "flex" ||
+    summaryOverlay.style.display === "flex" ||
+    helpOverlay.style.display === "flex" ||
+    nameOverlay.style.display === "flex"
+  );
+}
 
-  function closeAllPopups() {
-    popupOverlay.style.display = "none";
-    summaryOverlay.style.display = "none";
-    helpOverlay.style.display = "none";
-    nameOverlay.style.display = "none";
-  }
+function closeAllPopups() {
+  popupOverlay.style.display = "none";
+  summaryOverlay.style.display = "none";
+  helpOverlay.style.display = "none";
+  nameOverlay.style.display = "none";
+}
 
-  function handleBackAction() {
-    if (anyPopupOpen()) {
-      // اگر پاپ‌آپ باز است، فقط پاپ‌آپ‌ها را ببند
-      closeAllPopups();
-    } else {
-      // اگر پاپ‌آپی نیست، خود برنامک جمع شود (مثل تانکیتا)
-      if (
-        window.Eitaa &&
-        window.Eitaa.WebApp &&
-        typeof window.Eitaa.WebApp.close === "function"
-      ) {
-        window.Eitaa.WebApp.close();
-      } else if (window.history && typeof window.history.back === "function") {
-        window.history.back();
-      } else {
-        window.close();
-      }
-    }
+// این تابع فقط چک می‌کنه پاپ‌آپ باز هست یا نه
+// اگر پاپ‌آپی را بستیم → true
+// اگر هیچی نبود برای بستن → false
+function handleBackAction() {
+  if (anyPopupOpen()) {
+    closeAllPopups();
+    return true;
   }
+  return false;
+}
 
 // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
 function showPopup(key, overrideText, options) {
