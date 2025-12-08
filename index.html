@@ -1322,7 +1322,8 @@
 
   
 
-  // 🔙 مدیریت بک‌باتن و پاپ‌آپ‌ها
+  // ✅ مدیریت بک‌باتن و پاپ‌آپ‌ها – مثل تانکیتا
+
 function anyPopupOpen() {
   return (
     popupOverlay.style.display === "flex" ||
@@ -1339,18 +1340,18 @@ function closeAllPopups() {
   nameOverlay.style.display = "none";
 }
 
+// این تابع فقط تصمیم می‌گیرد «آیا بک را خودم هندل کردم یا نه»
 function handleBackAction() {
-    if (anyPopupOpen()) {
-      // اگر پاپ‌آپی باز است، فقط پاپ‌آپ‌ها بسته شوند
-      closeAllPopups();
-    } else {
-      // اگر پاپ‌آپی باز نیست، مثل تانکیتا وب‌اپ را جمع کن
-      if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.close === "function") {
-        window.Eitaa.WebApp.close();   // جمع‌شدن برنامک پایین صفحه
-      } else if (window.history && typeof window.history.back === "function") {
-        window.history.back();
-      }
-    }
+  if (anyPopupOpen()) {
+    // اگر هر پاپ‌آپی باز است، فقط آنها را ببند
+    closeAllPopups();
+    return true;   // یعنی: بک اینجا مصرف شد، دیگه ایتا کاری نکنه
+  }
+
+  // هیچ پاپ‌آپی باز نیست، اینجا کاری نمی‌کنیم
+  // و تصمیم را می‌سپاریم به خود ایتا (wa.close)
+  return false;
+}
   }
 
 // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
@@ -2198,20 +2199,38 @@ helpCloseBtn.addEventListener("click", () => {
       });
     }
 
-    // اتصال SDK (دقیقاً مثل تانکیتا)
-      if (window.Eitaa && window.Eitaa.WebApp) {
-        try {
-          const wa = window.Eitaa.WebApp;
+    // ✅ اتصال SDK ایتا – رفتار دقیق مثل تانکیتا
+if (window.Eitaa && window.Eitaa.WebApp) {
+  try {
+    const wa = window.Eitaa.WebApp;
 
-          if (typeof wa.ready === "function") wa.ready();
-          if (typeof wa.expand === "function") wa.expand();
+    if (typeof wa.ready === "function") wa.ready();
+    if (typeof wa.expand === "function") wa.expand();
 
-          // بک‌باتن ایتا → فقط تابع handleBackAction صدا زده شود
-          if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
-            wa.BackButton.onClick(handleBackAction);
+    if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
+      wa.BackButton.onClick(function () {
+        let handled = false;
+
+        if (typeof handleBackAction === "function") {
+          handled = handleBackAction();
+        }
+
+        // اگر پاپ‌آپی باز نبود و ما چیزی هندل نکردیم → مینی‌اپ را ببند (جمع بشه پایین)
+        if (!handled) {
+          if (typeof wa.close === "function") {
+            wa.close();
+          } else {
+            window.close();
           }
-        } catch (e) {}
-      }
+        }
+      });
+    }
+
+    if (wa.BackButton && typeof wa.BackButton.show === "function") {
+      wa.BackButton.show();
+    }
+  } catch (e) {}
+}
   })();
 </script>
 
