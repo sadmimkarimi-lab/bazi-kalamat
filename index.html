@@ -1340,14 +1340,18 @@ function closeAllPopups() {
 }
 
 function handleBackAction() {
-  if (anyPopupOpen()) {
-    closeAllPopups();   // فقط پاپ‌آپ‌ها بسته شوند
-    return true;        // یعنی یک کاری انجام شد
+    if (anyPopupOpen()) {
+      // اگر پاپ‌آپی باز است، فقط پاپ‌آپ‌ها بسته شوند
+      closeAllPopups();
+    } else {
+      // اگر پاپ‌آپی باز نیست، مثل تانکیتا وب‌اپ را جمع کن
+      if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.close === "function") {
+        window.Eitaa.WebApp.close();   // جمع‌شدن برنامک پایین صفحه
+      } else if (window.history && typeof window.history.back === "function") {
+        window.history.back();
+      }
+    }
   }
-
-  // هیچ پاپ‌آپی باز نبود → کاری نکنیم
-  return false;
-}
 
 // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
 function showPopup(key, overrideText, options) {
@@ -2194,34 +2198,20 @@ helpCloseBtn.addEventListener("click", () => {
       });
     }
 
-    // اتصال SDK
-    if (window.Eitaa && window.Eitaa.WebApp) {
-      try {
-        const wa = window.Eitaa.WebApp;
+    // اتصال SDK (دقیقاً مثل تانکیتا)
+      if (window.Eitaa && window.Eitaa.WebApp) {
+        try {
+          const wa = window.Eitaa.WebApp;
 
-        if (typeof wa.ready === "function") wa.ready();
-        if (typeof wa.expand === "function") wa.expand();
+          if (typeof wa.ready === "function") wa.ready();
+          if (typeof wa.expand === "function") wa.expand();
 
-        // 🔙 اتصال بک‌باتن ایتا به handleBackAction
-        if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
-          wa.BackButton.onClick(function () {
-
-            if (typeof handleBackAction === "function") {
-              handleBackAction();
-            } else if (typeof wa.close === "function") {
-              wa.close();
-            } else {
-              window.close();
-            }
-
-          });
-
-          if (typeof wa.BackButton.show === "function") {
-            wa.BackButton.show();
+          // بک‌باتن ایتا → فقط تابع handleBackAction صدا زده شود
+          if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
+            wa.BackButton.onClick(handleBackAction);
           }
-        }
-      } catch (e) {}
-    }
+        } catch (e) {}
+      }
   })();
 </script>
 
