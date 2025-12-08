@@ -1398,29 +1398,35 @@ if (window.history && typeof window.history.pushState === "function") {
   });
 
   // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
-  function showPopup(key, overrideText, options) {
-    const data = POPUPS[key];
-    if (!data) return;
-    popupImageEl.src = data.img;
-    popupTextEl.innerHTML = overrideText || data.text;
-    popupBtnLabel.textContent = "باشه، بزن بریم 🚀";
+function showPopup(key, overrideText, options) {
+  const data = POPUPS[key];
+  if (!data) return;
+
+  popupImageEl.src       = data.img;
+  popupTextEl.innerHTML  = overrideText || data.text;
+  popupBtnLabel.textContent = "باشه، بزن بریم 🚀";
+
+  // ✅ ثبت در history و آپدیت بک‌باتن
+  openPopupWithHistory(() => {
     popupOverlay.style.display = "flex";
+  });
 
-    const skipVoice = options && options.skipVoice;
+  const skipVoice = options && options.skipVoice;
 
-    if (!skipVoice) {
-      if (key === "intro") {
-        playSafe(voiceIntro);
-      } else if (key === "final") {
-        playSafe(voiceChampion);
-      }
+  if (!skipVoice) {
+    if (key === "intro") {
+      playSafe(voiceIntro);
+    } else if (key === "final") {
+      playSafe(voiceChampion);
     }
   }
+}
 
-  function hidePopup() {
-    popupOverlay.style.display = "none";
-  }
-
+function hidePopup() {
+  popupOverlay.style.display = "none";
+  // ✅ هر بار که بسته شد، بک‌باتن را هم تنظیم کن
+  updateBackButtonUI();
+}
   if (popupBtn) {
     popupBtn.addEventListener("click", () => {
       playSafe(soundClick);
@@ -1656,12 +1662,14 @@ if (window.history && typeof window.history.pushState === "function") {
   }
 
   function showNamePopupIfNeeded() {
-    if (!playerName) {
+  if (!playerName) {
+    openPopupWithHistory(() => {
       nameOverlay.style.display = "flex";
       playerNameInput.value = "";
       playerNameInput.focus();
-    }
+    });
   }
+}
 
   function updateMissionForLevel() {
     const lvl = currentLevelIndex + 1;
@@ -2210,12 +2218,18 @@ saveNameBtn.addEventListener("click", () => {
   }
 
   if (window.Eitaa && window.Eitaa.WebApp) {
-    try {
-      const wa = window.Eitaa.WebApp;
-      wa.ready();
-      wa.expand();
-    } catch (e) {}
-  }
+  try {
+    const wa = window.Eitaa.WebApp;
+
+    if (typeof wa.ready === "function")  wa.ready();
+    if (typeof wa.expand === "function") wa.expand();
+
+    // بک‌باتن ایتا → تابع مشترک handleBackAction
+    if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
+      wa.BackButton.onClick(handleBackAction);
+    }
+  } catch (e) {}
+}
 })();
 </script>
 
