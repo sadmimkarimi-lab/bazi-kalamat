@@ -1271,8 +1271,86 @@
   const voiceModeOn    = document.getElementById("voiceModeOn");
   const voiceChampion  = document.getElementById("voiceChampion");
 
+// --- آیا هیچ پاپ‌آپی باز است؟ ---
+function anyPopupOpen() {
+  function isVisible(el) {
+    return el && el.style.display && el.style.display !== "none";
+  }
+
+  return (
+    isVisible(summaryOverlay) ||
+    isVisible(helpOverlay)    ||
+    isVisible(nameOverlay)    ||
+    isVisible(popupOverlay)
+  );
+}
+
+// --- نمایش / مخفی کردن بک‌باتن ایتا ---
+function updateBackButtonUI() {
+  if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
+    const bb = window.Eitaa.WebApp.BackButton;
+    if (anyPopupOpen()) {
+      bb.show();
+    } else {
+      bb.hide();
+    }
+  }
+}
+
+// --- بستن همه پاپ‌آپ‌ها ---
+function closeAllPopups() {
+  [summaryOverlay, helpOverlay, nameOverlay, popupOverlay].forEach(o => {
+    if (o) o.style.display = "none";
+  });
+  updateBackButtonUI();
+}
+
+// --- تابع مشترک برای بک گوشی / بک‌باتن ایتا ---
+function handleBackAction() {
+  if (anyPopupOpen()) {
+    // اگر پاپ‌آپی باز است، فقط پاپ‌آپ‌ها را ببند
+    closeAllPopups();
+  } else {
+    // اگر پاپ‌آپی نیست، وب‌اپ را ببند یا برگرد
+    if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.close === "function"
+    ) {
+      window.Eitaa.WebApp.close();
+    } else if (window.history && typeof window.history.back === "function") {
+      window.history.back();
+    }
+  }
+}
+
+  
   totalLevelsEl.textContent = totalLevels.toString();
 
+
+// باز کردن هر پاپ‌آپ + ثبت در history
+function openPopupWithHistory(openFn) {
+  if (typeof openFn === "function") {
+    openFn();
+  }
+  if (window.history && typeof window.history.pushState === "function") {
+    window.history.pushState({ popup: true }, "");
+  }
+  updateBackButtonUI();
+}
+
+// هندل popstate (بک خود مرورگر/گوشی)
+if (window.history && typeof window.history.pushState === "function") {
+  window.addEventListener("popstate", function () {
+    if (typeof handleBackAction === "function") {
+      handleBackAction();
+    }
+  });
+}
+
+
+
+  
   function loadSoundSetting() {
     try {
       const raw = localStorage.getItem("tavitaWordsSoundMuted");
@@ -2024,52 +2102,62 @@
   });
 
   // خلاصه پیشرفت
-  summaryBtn.addEventListener("click", () => {
-    playSafe(soundClick);
-    let rec = { bestLevel: 0, bestScore: 0 };
-    try {
-      const raw = localStorage.getItem("tavitaWordsRecord");
-      if (raw) rec = JSON.parse(raw);
-    } catch (e) {}
+summaryBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  let rec = { bestLevel: 0, bestScore: 0 };
+  try {
+    const raw = localStorage.getItem("tavitaWordsRecord");
+    if (raw) rec = JSON.parse(raw);
+  } catch (e) {}
 
-    summaryNameEl.textContent = playerName || "-";
-    summaryLevelEl.textContent = (currentLevelIndex + 1).toString();
-    summaryScoreEl.textContent = score.toString();
-    summaryWordsEl.textContent = totalWords.toString();
-    summaryBestComboEl.textContent = bestCombo.toString();
-    summaryBestLevelEl.textContent = (rec.bestLevel || 0).toString();
-    summaryBestScoreEl.textContent = (rec.bestScore || 0).toString();
+  summaryNameEl.textContent       = playerName || "-";
+  summaryLevelEl.textContent      = (currentLevelIndex + 1).toString();
+  summaryScoreEl.textContent      = score.toString();
+  summaryWordsEl.textContent      = totalWords.toString();
+  summaryBestComboEl.textContent  = bestCombo.toString();
+  summaryBestLevelEl.textContent  = (rec.bestLevel || 0).toString();
+  summaryBestScoreEl.textContent  = (rec.bestScore || 0).toString();
 
+  openPopupWithHistory(() => {
     summaryOverlay.style.display = "flex";
   });
+});
 
-  summaryCloseBtn.addEventListener("click", () => {
-    playSafe(soundClick);
-    summaryOverlay.style.display = "none";
-  });
+summaryCloseBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  summaryOverlay.style.display = "none";
+  updateBackButtonUI();
+});
 
-  // راهنمای بازی
-  helpBtn.addEventListener("click", () => {
-    playSafe(soundClick);
+// راهنمای بازی
+helpBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  openPopupWithHistory(() => {
     helpOverlay.style.display = "flex";
   });
+});
 
-  helpCloseBtn.addEventListener("click", () => {
-    playSafe(soundClick);
-    helpOverlay.style.display = "none";
-  });
+helpCloseBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  helpOverlay.style.display = "none";
+  updateBackButtonUI();
+});
 
-  saveNameBtn.addEventListener("click", () => {
-    const name = playerNameInput.value.trim();
-    if (name) {
-      playerName = name;
-      savePlayerName();
-    }
-    nameOverlay.style.display = "none";
-    showPopup("intro",
-      `به بازی خوش اومدی ${playerName || ""} 💜 الان شاگرد کلمات طاویتا هستی. این مرحله رو رد کنی، استاد کلمات طاویتا می‌شی!`
-    );
-  });
+// ذخیره نام
+saveNameBtn.addEventListener("click", () => {
+  const name = playerNameInput.value.trim();
+  if (name) {
+    playerName = name;
+    savePlayerName();
+  }
+  nameOverlay.style.display = "none";
+  updateBackButtonUI();
+
+  showPopup(
+    "intro",
+    `به بازی خوش اومدی ${playerName || ""} 💜 الان شاگرد کلمات طاویتا هستی. این مرحله رو رد کنی، استاد کلمات طاویتا می‌شی!`
+  );
+});
 
   window.onload = function () {
     loadSoundSetting();
