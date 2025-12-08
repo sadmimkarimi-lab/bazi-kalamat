@@ -1319,36 +1319,96 @@
     playSafe(soundClick);
   });
 
-  // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
-  function showPopup(key, overrideText, options) {
-    const data = POPUPS[key];
-    if (!data) return;
-    popupImageEl.src = data.img;
-    popupTextEl.innerHTML = overrideText || data.text;
-    popupBtnLabel.textContent = "باشه، بزن بریم 🚀";
-    popupOverlay.style.display = "flex";
 
-    const skipVoice = options && options.skipVoice;
+  // 🔙 مدیریت بک‌باتن و پاپ‌آپ‌ها
+function anyPopupOpen() {
+  return (
+    popupOverlay.style.display === "flex" ||
+    summaryOverlay.style.display === "flex" ||
+    helpOverlay.style.display === "flex" ||
+    nameOverlay.style.display === "flex"
+  );
+}
 
-    if (!skipVoice) {
-      if (key === "intro") {
-        playSafe(voiceIntro);
-      } else if (key === "final") {
-        playSafe(voiceChampion);
-      }
+function closeAllPopups() {
+  popupOverlay.style.display = "none";
+  summaryOverlay.style.display = "none";
+  helpOverlay.style.display = "none";
+  nameOverlay.style.display = "none";
+}
+
+function handleBackAction() {
+  if (anyPopupOpen()) {
+    closeAllPopups();
+    return true; // یعنی یه چیزی بستیم
+  }
+  return false; // چیزی برای بستن نبود
+}
+
+// پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
+function showPopup(key, overrideText, options) {
+  const data = POPUPS[key];
+  if (!data) return;
+
+  // برای بک‌باتن: هر بار پاپ‌آپ باز می‌شود یک state جدید در history اضافه کن
+  if (window.history && typeof window.history.pushState === "function") {
+    window.history.pushState({ popup: key }, "");
+  }
+
+  popupImageEl.src = data.img;
+  popupTextEl.innerHTML = overrideText || data.text;
+  popupBtnLabel.textContent = "باشه، بزن بریم 🚀";
+  popupOverlay.style.display = "flex";
+
+  const skipVoice = options && options.skipVoice;
+
+  if (!skipVoice) {
+    if (key === "intro") {
+      playSafe(voiceIntro);
+    } else if (key === "final") {
+      playSafe(voiceChampion);
     }
   }
+}
 
-  function hidePopup() {
-    popupOverlay.style.display = "none";
-  }
+function hidePopup() {
+  popupOverlay.style.display = "none";
+}
 
-  if (popupBtn) {
-    popupBtn.addEventListener("click", () => {
-      playSafe(soundClick);
-      hidePopup();
+if (popupBtn) {
+  popupBtn.addEventListener("click", () => {
+    playSafe(soundClick);
+    hidePopup();
+  });
+}
+
+// گوش دادن به back (history.popstate) برای بستن پاپ‌آپ‌ها
+if (window.history && typeof window.history.pushState === "function") {
+  window.addEventListener("popstate", function () {
+    handleBackAction();
+  });
+}
+
+// اتصال بک‌باتن خود ایتا
+if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
+  try {
+    const wa = window.Eitaa.WebApp;
+    wa.BackButton.show();
+    wa.BackButton.onClick(function () {
+      // اگر پاپ‌آپی باز است، فقط همان را ببند
+      if (handleBackAction()) {
+        if (window.history && typeof window.history.back === "function") {
+          window.history.back();
+        }
+      } else {
+        // اگر چیزی باز نیست، بک‌باتن ایتا خودش چت را ببندد
+        if (typeof wa.close === "function") {
+          wa.close();
+        }
+      }
     });
-  }
+  } catch (e) {}
+}
 
   function shuffleString(str) {
     let arr = str.split("");
