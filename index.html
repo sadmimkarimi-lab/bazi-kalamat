@@ -1638,12 +1638,15 @@ if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
   }
 
   function showNamePopupIfNeeded() {
-    if (!playerName) {
-      nameOverlay.style.display = "flex";
-      playerNameInput.value = "";
-      playerNameInput.focus();
+  if (!playerName) {
+    if (window.history && typeof window.history.pushState === "function") {
+      window.history.pushState({ popup: "name" }, "");
     }
+    nameOverlay.style.display = "flex";
+    playerNameInput.value = "";
+    playerNameInput.focus();
   }
+}
 
   function updateMissionForLevel() {
     const lvl = currentLevelIndex + 1;
@@ -2084,40 +2087,46 @@ if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
   });
 
   // خلاصه پیشرفت
-  summaryBtn.addEventListener("click", () => {
-    playSafe(soundClick);
-    let rec = { bestLevel: 0, bestScore: 0 };
-    try {
-      const raw = localStorage.getItem("tavitaWordsRecord");
-      if (raw) rec = JSON.parse(raw);
-    } catch (e) {}
+summaryBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  let rec = { bestLevel: 0, bestScore: 0 };
+  try {
+    const raw = localStorage.getItem("tavitaWordsRecord");
+    if (raw) rec = JSON.parse(raw);
+  } catch (e) {}
 
-    summaryNameEl.textContent = playerName || "-";
-    summaryLevelEl.textContent = (currentLevelIndex + 1).toString();
-    summaryScoreEl.textContent = score.toString();
-    summaryWordsEl.textContent = totalWords.toString();
-    summaryBestComboEl.textContent = bestCombo.toString();
-    summaryBestLevelEl.textContent = (rec.bestLevel || 0).toString();
-    summaryBestScoreEl.textContent = (rec.bestScore || 0).toString();
+  summaryNameEl.textContent = playerName || "-";
+  summaryLevelEl.textContent = (currentLevelIndex + 1).toString();
+  summaryScoreEl.textContent = score.toString();
+  summaryWordsEl.textContent = totalWords.toString();
+  summaryBestComboEl.textContent = bestCombo.toString();
+  summaryBestLevelEl.textContent = (rec.bestLevel || 0).toString();
+  summaryBestScoreEl.textContent = (rec.bestScore || 0).toString();
 
-    summaryOverlay.style.display = "flex";
-  });
+  if (window.history && typeof window.history.pushState === "function") {
+    window.history.pushState({ popup: "summary" }, "");
+  }
+  summaryOverlay.style.display = "flex";
+});
 
-  summaryCloseBtn.addEventListener("click", () => {
-    playSafe(soundClick);
-    summaryOverlay.style.display = "none";
-  });
+summaryCloseBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  summaryOverlay.style.display = "none";
+});
 
-  // راهنمای بازی
-  helpBtn.addEventListener("click", () => {
-    playSafe(soundClick);
-    helpOverlay.style.display = "flex";
-  });
+// راهنمای بازی
+helpBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  if (window.history && typeof window.history.pushState === "function") {
+    window.history.pushState({ popup: "help" }, "");
+  }
+  helpOverlay.style.display = "flex";
+});
 
-  helpCloseBtn.addEventListener("click", () => {
-    playSafe(soundClick);
-    helpOverlay.style.display = "none";
-  });
+helpCloseBtn.addEventListener("click", () => {
+  playSafe(soundClick);
+  helpOverlay.style.display = "none";
+});
 
   saveNameBtn.addEventListener("click", () => {
     const name = playerNameInput.value.trim();
