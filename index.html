@@ -1321,29 +1321,41 @@
 
 
   // 🔙 مدیریت بک‌باتن و پاپ‌آپ‌ها
-function anyPopupOpen() {
-  return (
-    popupOverlay.style.display === "flex" ||
-    summaryOverlay.style.display === "flex" ||
-    helpOverlay.style.display === "flex" ||
-    nameOverlay.style.display === "flex"
-  );
-}
-
-function closeAllPopups() {
-  popupOverlay.style.display = "none";
-  summaryOverlay.style.display = "none";
-  helpOverlay.style.display = "none";
-  nameOverlay.style.display = "none";
-}
-
-function handleBackAction() {
-  if (anyPopupOpen()) {
-    closeAllPopups();
-    return true; // یعنی یه چیزی بستیم
+  function anyPopupOpen() {
+    return (
+      popupOverlay.style.display === "flex" ||
+      summaryOverlay.style.display === "flex" ||
+      helpOverlay.style.display === "flex" ||
+      nameOverlay.style.display === "flex"
+    );
   }
-  return false; // چیزی برای بستن نبود
-}
+
+  function closeAllPopups() {
+    popupOverlay.style.display = "none";
+    summaryOverlay.style.display = "none";
+    helpOverlay.style.display = "none";
+    nameOverlay.style.display = "none";
+  }
+
+  function handleBackAction() {
+    if (anyPopupOpen()) {
+      // اگر پاپ‌آپ باز است، فقط پاپ‌آپ‌ها را ببند
+      closeAllPopups();
+    } else {
+      // اگر پاپ‌آپی نیست، خود برنامک جمع شود (مثل تانکیتا)
+      if (
+        window.Eitaa &&
+        window.Eitaa.WebApp &&
+        typeof window.Eitaa.WebApp.close === "function"
+      ) {
+        window.Eitaa.WebApp.close();
+      } else if (window.history && typeof window.history.back === "function") {
+        window.history.back();
+      } else {
+        window.close();
+      }
+    }
+  }
 
 // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
 function showPopup(key, overrideText, options) {
@@ -2190,6 +2202,7 @@ helpCloseBtn.addEventListener("click", () => {
       });
     }
 
+    // اتصال SDK
     if (window.Eitaa && window.Eitaa.WebApp) {
       try {
         const wa = window.Eitaa.WebApp;
@@ -2197,21 +2210,18 @@ helpCloseBtn.addEventListener("click", () => {
         if (typeof wa.ready === "function") wa.ready();
         if (typeof wa.expand === "function") wa.expand();
 
-        // وصل کردن بک‌باتن ایتا به handleBackAction ما
+        // 🔙 اتصال بک‌باتن ایتا به handleBackAction
         if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
           wa.BackButton.onClick(function () {
-            // اول سعی کن پاپ‌آپ‌ها رو ببندی
-            if (typeof handleBackAction === "function") {
-              const handled = handleBackAction();
-              if (handled) return; // یه چیزی بسته شد، لازم نیست برنامک بسته بشه
-            }
 
-            // اگه چیزی برای بستن نبود، خود برنامک بسته بشه (مثل تانکیتا جمع می‌شه پایین)
-            if (typeof wa.close === "function") {
+            if (typeof handleBackAction === "function") {
+              handleBackAction();
+            } else if (typeof wa.close === "function") {
               wa.close();
             } else {
               window.close();
             }
+
           });
 
           if (typeof wa.BackButton.show === "function") {
