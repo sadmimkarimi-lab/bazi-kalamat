@@ -2167,37 +2167,60 @@ helpCloseBtn.addEventListener("click", () => {
 
 
 <script>
-(function () {
-  const tavitaBtn = document.getElementById("tavitaChannelBtn");
+  (function () {
+    const tavitaBtn = document.getElementById("tavitaChannelBtn");
 
-  function openInEitaaOrBrowser(url) {
-    if (
-      window.Eitaa &&
-      window.Eitaa.WebApp &&
-      typeof window.Eitaa.WebApp.openEitaaLink === "function"
-    ) {
+    function openInEitaaOrBrowser(url) {
+      if (
+        window.Eitaa &&
+        window.Eitaa.WebApp &&
+        typeof window.Eitaa.WebApp.openEitaaLink === "function"
+      ) {
+        try {
+          window.Eitaa.WebApp.openEitaaLink(url);
+          return;
+        } catch (e) {}
+      }
+      window.location.href = url;
+    }
+
+    if (tavitaBtn) {
+      tavitaBtn.addEventListener("click", () => {
+        openInEitaaOrBrowser("https://eitaa.com/tavita");
+      });
+    }
+
+    if (window.Eitaa && window.Eitaa.WebApp) {
       try {
-        window.Eitaa.WebApp.openEitaaLink(url);
-        return;
+        const wa = window.Eitaa.WebApp;
+
+        if (typeof wa.ready === "function") wa.ready();
+        if (typeof wa.expand === "function") wa.expand();
+
+        // وصل کردن بک‌باتن ایتا به handleBackAction ما
+        if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
+          wa.BackButton.onClick(function () {
+            // اول سعی کن پاپ‌آپ‌ها رو ببندی
+            if (typeof handleBackAction === "function") {
+              const handled = handleBackAction();
+              if (handled) return; // یه چیزی بسته شد، لازم نیست برنامک بسته بشه
+            }
+
+            // اگه چیزی برای بستن نبود، خود برنامک بسته بشه (مثل تانکیتا جمع می‌شه پایین)
+            if (typeof wa.close === "function") {
+              wa.close();
+            } else {
+              window.close();
+            }
+          });
+
+          if (typeof wa.BackButton.show === "function") {
+            wa.BackButton.show();
+          }
+        }
       } catch (e) {}
     }
-    window.location.href = url;
-  }
-
-  if (tavitaBtn) {
-    tavitaBtn.addEventListener("click", () => {
-      openInEitaaOrBrowser("https://eitaa.com/tavita");
-    });
-  }
-
-  if (window.Eitaa && window.Eitaa.WebApp) {
-    try {
-      const wa = window.Eitaa.WebApp;
-      wa.ready();
-      wa.expand();
-    } catch (e) {}
-  }
-})();
+  })();
 </script>
 
 
