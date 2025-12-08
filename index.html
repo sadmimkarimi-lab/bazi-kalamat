@@ -2098,84 +2098,61 @@
 
 
 <script>
-  (function () {
-    const tavitaBtn = document.getElementById("tavitaChannelBtn");
+(function () {
+  const tavitaBtn = document.getElementById("tavitaChannelBtn");
 
-    // مثل قبل: باز کردن کانال طاویتا داخل ایتا (یا مرورگر)
-    function openInEitaaOrBrowser(url) {
-      if (
-        window.Eitaa &&
-        window.Eitaa.WebApp &&
-        typeof window.Eitaa.WebApp.openEitaaLink === "function"
-      ) {
-        try {
-          window.Eitaa.WebApp.openEitaaLink(url);
-          return;
-        } catch (e) {}
-      }
-      window.location.href = url;
-    }
-
-    if (tavitaBtn) {
-      tavitaBtn.addEventListener("click", () => {
-        openInEitaaOrBrowser("https://eitaa.com/tavita");
-      });
-    }
-
-    // --- اتصال SDK ایتا + مدیریت بک‌باتن مثل تانکیتا ---
-    if (window.Eitaa && window.Eitaa.WebApp) {
+  // باز کردن کانال طاویتا داخل ایتا (یا مرورگر، مثل قبل)
+  function openInEitaaOrBrowser(url) {
+    if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.openEitaaLink === "function"
+    ) {
       try {
-        const wa = window.Eitaa.WebApp;
-
-        // آماده و فول‌اسکرین
-        if (typeof wa.ready === "function") wa.ready();
-        if (typeof wa.expand === "function") wa.expand();
-
-        // المان‌های پاپ‌اپ در بازی کلمات
-        const popupOverlay   = document.getElementById("popupOverlay");
-        const nameOverlay    = document.getElementById("nameOverlay");
-        const summaryOverlay = document.getElementById("summaryOverlay");
-        const helpOverlay    = document.getElementById("helpOverlay");
-
-        // چک کنیم الان هیچ‌کدوم از پاپ‌اپ‌ها باز هست یا نه
-        function anyPopupOpen() {
-          return (
-            (popupOverlay   && popupOverlay.style.display !== "none") ||
-            (nameOverlay    && nameOverlay.style.display !== "none") ||
-            (summaryOverlay && summaryOverlay.style.display !== "none") ||
-            (helpOverlay    && helpOverlay.style.display !== "none")
-          );
-        }
-
-        // بستن همه‌ی پاپ‌اپ‌ها
-        function closeAllPopups() {
-          [popupOverlay, nameOverlay, summaryOverlay, helpOverlay].forEach(el => {
-            if (el) el.style.display = "none";
-          });
-        }
-
-        // کاری که موقع زدن بک انجام می‌دهیم
-        function handleBack() {
-          if (anyPopupOpen()) {
-            // اگر پاپ‌اپ باز است → فقط پاپ‌اپ‌ها بسته شوند
-            closeAllPopups();
-          } else if (typeof wa.close === "function") {
-            // اگر پاپ‌اپی باز نیست → مثل تانکیتا برنامک بسته شود
-            wa.close();
-          }
-        }
-
-        // وصل کردن هندلر به بک‌باتن ایتا
-        if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
-          wa.BackButton.onClick(handleBack);
-        }
-
-      } catch (e) {
-        // اگر SDK خطا داد، بازی بدون مشکل ادامه پیدا کند
-        console.error("Eitaa WebApp error in word game:", e);
-      }
+        window.Eitaa.WebApp.openEitaaLink(url);
+        return;
+      } catch (e) {}
     }
-  })();
+    window.location.href = url;
+  }
+
+  if (tavitaBtn) {
+    tavitaBtn.addEventListener("click", () => {
+      openInEitaaOrBrowser("https://eitaa.com/tavita");
+    });
+  }
+
+  // ✅ تابع مخصوص بک‌باتن ایتا – مثل رفتار تانکیتا
+  function handleBackAction() {
+    // اینجا اگر خواستی بعداً می‌تونی اول پاپ‌آپ‌ها رو ببندی
+    // فعلاً مستقیم برنامک را می‌بندیم تا مثل تانکیتا جمع شود.
+    if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.close === "function"
+    ) {
+      window.Eitaa.WebApp.close();
+    }
+  }
+
+  // ✅ اتصال درست به SDK ایتا
+  if (window.Eitaa && window.Eitaa.WebApp) {
+    try {
+      const wa = window.Eitaa.WebApp;
+
+      if (typeof wa.ready === "function") wa.ready();
+      if (typeof wa.expand === "function") wa.expand();
+
+      // وصل کردن بک‌باتن به تابع بالا
+      if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
+        wa.BackButton.onClick(handleBackAction);
+        if (typeof wa.BackButton.show === "function") {
+          wa.BackButton.show();
+        }
+      }
+    } catch (e) {}
+  }
+})();
 </script>
 
 
