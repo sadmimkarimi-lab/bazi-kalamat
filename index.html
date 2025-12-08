@@ -766,39 +766,6 @@
     }
   </style>
 <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-    // 1) اعلام آمادگی برنامک
-    if (window.Eitaa && window.Eitaa.WebApp) {
-        console.log("Eitaa SDK فعال است");
-
-        Eitaa.WebApp.ready();     // لازم و اجباری
-        Eitaa.WebApp.expand();    // فول‌اسکرین شدن
-
-        // 2) فعال کردن دکمه برگشت ایتا
-        const back = Eitaa.WebApp.BackButton;
-        back.show();
-
-        back.onClick(() => {
-            // بررسی: اگر پاپ‌آپ باز است → پاپ‌آپ را ببند
-            const popup = document.querySelector(".popup.active");
-            if (popup) popup.classList.remove("active");
-            else Eitaa.WebApp.close();
-        });
-
-        // 3) اگر خواستی هشدار خروج فعال باشه:
-        Eitaa.WebApp.enableClosingConfirmation();
-
-        // 4) دریافت اطلاعات کاربر
-        const user = Eitaa.WebApp.initDataUnsafe?.user;
-        console.log("User Info:", user);
-    } else {
-        console.warn("SDK در محیط غیر ایتا فعال نیست");
-    }
-
-});
-</script>
   
 </head>
 <body>
@@ -2131,135 +2098,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 <script>
-  (function () {
-    // دکمه‌ی کانال طاویتا
-    const tavitaBtn = document.getElementById("tavitaChannelBtn");
+(function () {
+  const tavitaBtn = document.getElementById("tavitaChannelBtn");
 
-    function openInEitaaOrBrowser(url) {
-      if (
-        window.Eitaa &&
-        window.Eitaa.WebApp &&
-        typeof window.Eitaa.WebApp.openEitaaLink === "function"
-      ) {
-        try {
-          window.Eitaa.WebApp.openEitaaLink(url);
-          return;
-        } catch (e) {}
-      }
-      window.location.href = url;
-    }
-
-    if (tavitaBtn) {
-      tavitaBtn.addEventListener("click", () => {
-        openInEitaaOrBrowser("https://eitaa.com/tavita");
-      });
-    }
-
-    // ===== پاپ‌آپ‌های بازی کلمات =====
-    const popupOverlay   = document.getElementById("popupOverlay");
-    const nameOverlay    = document.getElementById("nameOverlay");
-    const summaryOverlay = document.getElementById("summaryOverlay");
-    const helpOverlay    = document.getElementById("helpOverlay");
-
-    function isVisible(el) {
-      if (!el) return false;
-      const style = window.getComputedStyle(el);
-      return style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0";
-    }
-
-    // آیا الان هیچ پاپ‌آپی باز است؟
-    function anyPopupOpen() {
-      return (
-        isVisible(popupOverlay)   ||
-        isVisible(nameOverlay)    ||
-        isVisible(summaryOverlay) ||
-        isVisible(helpOverlay)
-      );
-    }
-
-    // نمایش / مخفی کردن بک‌باتن ایتا
-    function updateBackButtonUI() {
-      if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.BackButton) {
-        const bb = window.Eitaa.WebApp.BackButton;
-        if (anyPopupOpen()) {
-          bb.show();
-        } else {
-          bb.hide();
-        }
-      }
-    }
-
-    // بستن تمام پاپ‌آپ‌ها
-    function closeAllPopups() {
-      [popupOverlay, nameOverlay, summaryOverlay, helpOverlay].forEach(el => {
-        if (el) el.style.display = "none";
-      });
-      updateBackButtonUI();
-    }
-
-    // رفتاری که باید روی "بک" انجام شود (مثل تانکیتا)
-    function handleBackAction() {
-      // اگر پاپ‌آپ باز است فقط پاپ‌آپ را ببند
-      if (anyPopupOpen()) {
-        closeAllPopups();
-        return;
-      }
-
-      // اگر پاپ‌آپی باز نیست → برنامک را ببند / جمع کن
-      if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.close === "function") {
-        try {
-          window.Eitaa.WebApp.close();
-          return;
-        } catch (e) {}
-      }
-
-      // حالت اضطراری خارج از ایتا
-      if (window.history && typeof window.history.back === "function") {
-        window.history.back();
-      }
-    }
-
-    // در اختیار بقیه‌ی اسکریپت هم بگذاریم (اگر لازم شد)
-    window.handleBackAction = handleBackAction;
-
-    // اگر تابع showPopup قبلی تعریف شده، آن را طوری wrap می‌کنیم که history + backButton هم درست شود
-    if (window.showPopup) {
-      const _originalShowPopup = window.showPopup;
-      window.showPopup = function () {
-        // برای اینکه دکمه‌ی بک گوشی هم اول پاپ‌آپ‌ها را ببندد
-        if (window.history && typeof window.history.pushState === "function") {
-          window.history.pushState({ popup: true }, "");
-        }
-        _originalShowPopup.apply(window, arguments);
-        updateBackButtonUI();
-      };
-    }
-
-    // وقتی بکِ سخت‌افزاری گوشی زده می‌شود (popstate)
-    if (window.history && typeof window.history.pushState === "function") {
-      window.addEventListener("popstate", function () {
-        handleBackAction();
-      });
-    }
-
-    // اتصال SDK ایتا (مثل تانکیتا)
-    if (window.Eitaa && window.Eitaa.WebApp) {
+  function openInEitaaOrBrowser(url) {
+    if (
+      window.Eitaa &&
+      window.Eitaa.WebApp &&
+      typeof window.Eitaa.WebApp.openEitaaLink === "function"
+    ) {
       try {
-        const wa = window.Eitaa.WebApp;
-
-        if (typeof wa.ready === "function")  wa.ready();
-        if (typeof wa.expand === "function") wa.expand();
-
-        // بک‌باتن بالای برنامک ایتا
-        if (wa.BackButton && typeof wa.BackButton.onClick === "function") {
-          wa.BackButton.onClick(handleBackAction);
-        }
+        window.Eitaa.WebApp.openEitaaLink(url);
+        return;
       } catch (e) {}
     }
+    window.location.href = url;
+  }
 
-    // برای شروع، وضعیت بک‌باتن را درست کن
-    updateBackButtonUI();
-  })();
+  if (tavitaBtn) {
+    tavitaBtn.addEventListener("click", () => {
+      openInEitaaOrBrowser("https://eitaa.com/tavita");
+    });
+  }
+
+  if (window.Eitaa && window.Eitaa.WebApp) {
+    try {
+      const wa = window.Eitaa.WebApp;
+      wa.ready();
+      wa.expand();
+    } catch (e) {}
+  }
+})();
 </script>
 
 
