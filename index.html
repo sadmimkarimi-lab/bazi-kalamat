@@ -1339,14 +1339,13 @@ function closeAllPopups() {
   nameOverlay.style.display = "none";
 }
 
-// این تابع فقط چک می‌کنه پاپ‌آپ باز هست یا نه
-// اگر پاپ‌آپی را بستیم → true
-// اگر هیچی نبود برای بستن → false
 function handleBackAction() {
   if (anyPopupOpen()) {
-    closeAllPopups();
-    return true;
+    closeAllPopups();   // فقط پاپ‌آپ‌ها بسته شوند
+    return true;        // یعنی یک کاری انجام شد
   }
+
+  // هیچ پاپ‌آپی باز نبود → کاری نکنیم
   return false;
 }
 
