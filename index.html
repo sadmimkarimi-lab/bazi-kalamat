@@ -1322,7 +1322,7 @@
 
   
 
-  // ✅ مدیریت بک‌باتن و پاپ‌آپ‌ها – مثل تانکیتا
+  // مدیریت بک‌باتن و پاپاپ‌ها - مثل تانکیتا
 
 function anyPopupOpen() {
   return (
@@ -1340,19 +1340,20 @@ function closeAllPopups() {
   nameOverlay.style.display = "none";
 }
 
-// این تابع فقط تصمیم می‌گیرد «آیا بک را خودم هندل کردم یا نه»
+// این تابع هم برای بک‌باتن ایتا و هم برای history.popstate صدا زده می‌شود
 function handleBackAction() {
   if (anyPopupOpen()) {
-    // اگر هر پاپ‌آپی باز است، فقط آنها را ببند
+    // اگر پاپ‌آپی باز است، فقط پاپ‌آپ‌ها را ببند
     closeAllPopups();
-    return true;   // یعنی: بک اینجا مصرف شد، دیگه ایتا کاری نکنه
+  } else {
+    // اگر پاپ‌آپی نیست، بگذار ایتا برنامک را جمع کند / ببندد
+    if (window.Eitaa && window.Eitaa.WebApp && typeof window.Eitaa.WebApp.close === "function") {
+      window.Eitaa.WebApp.close();
+    } else if (window.history && typeof window.history.back === "function") {
+      window.history.back();
+    }
   }
-
-  // هیچ پاپ‌آپی باز نیست، اینجا کاری نمی‌کنیم
-  // و تصمیم را می‌سپاریم به خود ایتا (wa.close)
-  return false;
 }
-  }
 
 // پاپ‌آپ عمومی با امکان جلوگیری از پخش ویس
 function showPopup(key, overrideText, options) {
