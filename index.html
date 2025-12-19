@@ -764,6 +764,23 @@
       .header-main { align-items: flex-start; }
       .mode-box { min-width: 100px; }
     }
+
+.hint-box{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-top:8px;
+}
+
+.hint-note-under-input{
+  margin-top:8px;
+  font-size:13px;
+  font-weight:700;
+  opacity:.95;
+  text-align:center;
+}
+
+    
   </style>
 <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
   
@@ -824,7 +841,7 @@
 
         <div class="mode-box">
           <button id="modeToggleBtn" class="mode-btn" type="button">
-            🎮 مود عادی
+            🎮 حالت عادی
           </button>
           <div id="timerLabel" class="timer-label hidden">
             ⏱️ زمان: 0 ثانیه
@@ -843,11 +860,11 @@
       </div>
 
       <div id="comboPill" class="combo-pill">
-        🔥 کامبو ×<span id="comboValue">1</span>
+        🔥 جایزه ×<span id="comboValue">1</span>
       </div>
 
       <div class="rank-bar">
-        <span>رنک:</span>
+        <span>رتبه:</span>
         <div class="rank-steps">
           <div id="rankStep1" class="rank-step"></div>
           <div id="rankStep2" class="rank-step"></div>
@@ -874,7 +891,7 @@
         <div class="tavita-wrapper">
           <div class="tavita-bubble">
             <span id="tavitaText">
-              سلام! بیا از همین کلمه چندتا کلمهٔ تازه دربیار ببینیم چی کار می‌کنی 😎✨
+              سلام! بیا از همین کلمه، چندتا کلمهٔ تازه دربیار ببینیم چی کار می‌کنی 😎✨
             </span>
           </div>
           <img
@@ -917,6 +934,12 @@
         placeholder="کلمه‌ای که ساختی را اینجا بنویس و روی «ثبت کلمه» بزن..."
       />
 
+<div class="hint-note-under-input">
+  نکته: لازم نیست از همه‌ی حروف استفاده کنی؛ کلمهٔ درست رو پیدا کن.
+</div>
+
+
+      
       <div class="buttons-row">
         <button id="checkBtn" class="primary-btn btn-half" type="button">
           <span>➕</span>
@@ -929,10 +952,22 @@
         </button>
       </div>
 
-      <button id="hintBtn" class="hint-btn" type="button">
-        <span class="icon">💡</span>
-        <span id="hintText">راهنما (۵ امتیاز کم می‌شود)</span>
-      </button>
+<div class="hint-box">
+  <button id="hintBtn1" class="hint-btn" type="button">
+    <span class="icon">💡</span>
+    <span>راهنما ۱ — هزینه ۵ امتیاز | نمایش ۱ حرف</span>
+  </button>
+
+  <button id="hintBtn2" class="hint-btn" type="button">
+    <span class="icon">💡💡</span>
+    <span>راهنما ۲ — هزینه ۱۵ امتیاز | نمایش ۲ حرف</span>
+  </button>
+
+  <button id="hintBtn3" class="hint-btn" type="button">
+    <span class="icon">🔢</span>
+    <span>راهنما ۳ — هزینه ۱۵ امتیاز | تعداد حروف</span>
+  </button>
+</div>
 
       <div id="rankText" class="rank-text rank-text-bottom">
         اگر همهٔ مراحل فعلی را رد کنی، <b>استاد کلمات طاویتا</b> می‌شوی 😉
@@ -999,7 +1034,7 @@
       <div>مرحلهٔ فعلی: <b id="summaryLevel">-</b></div>
       <div>امتیاز فعلی: <b id="summaryScore">-</b></div>
       <div>تعداد کل کلماتی که ثبت کردی: <b id="summaryWords">-</b></div>
-      <div>بیشترین کامبویی که داشتی: <b id="summaryBestCombo">-</b></div>
+      <div>بیشترین جوایزی که داشتی: <b id="summaryBestCombo">-</b></div>
       <div>بهترین رکورد: مرحله <b id="summaryBestLevel">-</b> | امتیاز <b id="summaryBestScore">-</b></div>
     </div>
     <button id="summaryCloseBtn" class="primary-btn popup-btn" type="button">
@@ -1011,15 +1046,28 @@
 <!-- پاپ‌آپ راهنمای بازی -->
 <div id="helpOverlay" class="popup-overlay" style="display:none;">
   <div class="popup-card">
-    <p class="popup-text">
-      🎯 <b>راهنمای سریع بازی کلمات طاویتا</b><br><br>
-      🔸 با حروف کلمهٔ اصلی، کلمات جدید بساز.<br>
-      🔹 تعداد کلمات لازم برای رفتن به مرحله بعد، زیر کلمهٔ اصلی نوشته شده.<br>
-      🔸 هر ۱۵ مرحله، بازی سخت‌تر می‌شود و رَنک تو عوض می‌شود (شاگرد → استاد → استادبزرگ → افسانه‌ای).<br>
-      🔹 اگر جایی گیر کردی، دکمهٔ 💡 راهنما کمکت می‌کند؛ فقط حواست باشد ۵ امتیاز ازت کم می‌شود.<br>
-      🔹 می‌تونی دکمهٔ «مود زمان‌دار» بالا را فعال کنی؛ فقط قبل از ثبت اولین کلمه و در هر مرحله یک‌بار می‌تونی فعالش کنی. در این حالت برای هر مرحله به ازای هر کلمه ۱۰ ثانیه وقت داری و امتیازهایی که می‌گیری دوبرابر حساب می‌شود ⏱️🔥<br>
-      🔹 اگر تا مرحلهٔ ۶۰ برسی، قهرمان بازی می‌شی؛ از صفحهٔ بازی اسکرین بگیر و برای طاویتا بفرست… جایزهٔ بزرگ منتظرته 🎁🔥
-    </p>
+<p class="popup-text">
+🎯 <b>راهنمای سریع بازی کلمات طاوینا</b><br><br>
+
+• با استفاده از <b>حروف کلمهٔ اصلی</b>، کلمات جدید بساز.<br>
+• <b>لازم نیست از همه‌ی حروف استفاده کنی</b>؛ فقط کلمهٔ درست رو پیدا کن.<br>
+• تعداد کلمات لازم برای رفتن به مرحلهٔ بعد، <b>زیر کلمهٔ اصلی</b> نوشته شده.<br><br>
+
+• هر <b>۱۵ مرحله</b>، بازی سخت‌تر می‌شود و <b>رتبه‌ات</b> تغییر می‌کند:<br>
+(شاگرد → استاد → استادبزرگ → افسانه‌ای)<br><br>
+
+• اگر جایی گیر کردی، از دکمهٔ <b>راهنما 💡</b> استفاده کن؛<br>
+هر راهنما مقداری از <b>امتیازت</b> را کم می‌کند.<br><br>
+
+• می‌توانی <b>حالت زمان‌دار ⏱️</b> را فعال کنی:<br>
+– فقط <b>قبل از ثبت اولین کلمه</b><br>
+– در هر مرحله فقط <b>یک‌بار</b><br>
+– برای هر کلمه <b>۱۰ ثانیه</b> زمان داری<br>
+– امتیازها در این حالت <b>دو برابر</b> حساب می‌شوند 🔥<br><br>
+
+• اگر تا <b>مرحلهٔ ۶۰</b> پیش بروی، قهرمان بازی می‌شوی!<br>
+از صفحهٔ بازی اسکرین بگیر و برای طاوینا بفرست 🎁
+</p>
     <button id="helpCloseBtn" class="primary-btn popup-btn" type="button">
       فهمیدم، بریم بازی کنیم 🎮
     </button>
@@ -1186,10 +1234,11 @@
   let isMuted = false;
   let playerName = "";
 
-  let hintStage = 0;         // 0=هیچ، 1=راهنما اول، 2=راهنما دوم
-let hintLocked = false;    // بعد از راهنما دوم قفل میشه
-let hintWordForLevel = ""; // کلمه‌ای که راهنما روی همون میچرخه
-
+  let hintWordForLevel = "";   // کلمه‌ای که راهنما روی آن می‌چرخد
+let usedHint1 = false;
+let usedHint2 = false;
+let usedHint3 = false;
+  
   // مود بازی و تایمر
   let gameMode = "normal";
   let timerId = null;
@@ -1197,6 +1246,10 @@ let hintWordForLevel = ""; // کلمه‌ای که راهنما روی همون 
   const TIME_PER_WORD = 10;
   let modeLocked = false;
 
+let timedUsedThisLevel = false;   // هر مرحله فقط یک‌بار اجازه حالت زمان‌دار
+let timedLockStarted = false;     // وقتی زمان‌دار شروع شد دیگه قابل خاموش کردن نیست
+
+  
   const scoreTextEl     = document.getElementById("scoreText");
   const levelNumberEl   = document.getElementById("levelNumber");
   const totalLevelsEl   = document.getElementById("totalLevels");
@@ -1226,7 +1279,9 @@ let hintWordForLevel = ""; // کلمه‌ای که راهنما روی همون 
   const comboValueEl    = document.getElementById("comboValue");
   const missionBadgeEl  = document.getElementById("missionBadge");
   const missionTextEl   = document.getElementById("missionText");
-  const hintBtn         = document.getElementById("hintBtn");
+  const hintBtn1 = document.getElementById("hintBtn1");
+const hintBtn2 = document.getElementById("hintBtn2");
+const hintBtn3 = document.getElementById("hintBtn3");
   const soundToggleBtn  = document.getElementById("soundToggle");
   const soundIndicator  = document.getElementById("soundIndicator");
   const soundLabel      = document.getElementById("soundLabel");
@@ -1722,7 +1777,7 @@ function hidePopup() {
     }
   }
 
-  // تایمر مود زمان‌دار
+  // تایمر حالت زمان‌دار
   function updateTimerLabel() {
     timerLabel.textContent = `⏱️ زمان: ${timeLeft} ثانیه`;
   }
@@ -1791,11 +1846,19 @@ function hidePopup() {
     clearTimer();
 
     if (resetFound) {
-      foundWords = [];
-      modeLocked = false;
-    } else {
-      modeLocked = foundWords.length > 0;
-    }
+  foundWords = [];
+
+  // هر مرحله از نو: حالت زمان‌دار باید دستی فعال بشه (اتومات شروع نشه)
+  gameMode = "normal";
+  timedUsedThisLevel = false;
+  timedLockStarted = false;
+
+  modeLocked = false;
+  modeToggleBtn.disabled = false;
+
+} else {
+  modeLocked = foundWords.length > 0;
+}
 
     renderFoundWords();
     scoreTextEl.textContent = score.toString();
@@ -1827,10 +1890,10 @@ function hidePopup() {
       );
     }
 
-    // وضعیت مود
+    // وضعیت حالت
     modeToggleBtn.disabled = modeLocked;
     if (gameMode === "timed") {
-      modeToggleBtn.textContent = "⏱️ مود زمان‌دار";
+      modeToggleBtn.textContent = "⏱️ حالت زمان‌دار";
       if (!modeLocked) {
         startLevelTimer();
       } else {
@@ -1838,7 +1901,7 @@ function hidePopup() {
       }
       if (modeHint) modeHint.classList.add("hidden");
     } else {
-      modeToggleBtn.textContent = "🎮 مود عادی";
+      modeToggleBtn.textContent = "🎮 حالت عادی";
       clearTimer();
       if (modeHint) {
         if (!modeLocked) modeHint.classList.remove("hidden");
@@ -1946,19 +2009,30 @@ hintBtn.textContent = "راهنما";
 
     // موفقیت
     foundWords.push(w);
+    if (hintWordForLevel && w === hintWordForLevel) {
+  resetHintsForNextWord();
+    }
+
+// اگر مرحله تموم شد، زمان متوقف شود
+if (gameMode === "timed" && foundWords.length >= level.needed) {
+  clearTimer();
+  timeLeft = 0;
+}
+
+    
     totalWords += 1;
     renderFoundWords();
     wordInputEl.value = "";
     wordInputEl.focus();
 
-    // بعد از اولین کلمه، مود قفل می‌شود
+    // بعد از اولین کلمه، حالت زمان قفل می‌شود
     if (foundWords.length === 1) {
       modeLocked = true;
       modeToggleBtn.disabled = true;
       if (modeHint) modeHint.classList.add("hidden");
     }
 
-    // امتیاز + کامبو (در مود زمان‌دار دوبرابر)
+    // امتیاز + کامبو (در حالت زمان‌دار دوبرابر)
     const baseInc = (gameMode === "timed" ? 20 : 10);
     applyComboAndScore(baseInc);
 
@@ -2004,80 +2078,149 @@ hintBtn.textContent = "راهنما";
     setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
   });
 
-hintBtn.addEventListener("click", () => {
+
+
+  
+function pickHintWord() {
   const level = levels[currentLevelIndex];
+  const remaining = level.answers.map(normalizeWord).filter(a => !foundWords.includes(a));
+  if (remaining.length === 0) return "";
+  return remaining[Math.floor(Math.random() * remaining.length)];
+}
 
-  // 1) اگر قفل شده: فقط پیام بده، امتیاز کم نکن
-  if (hintLocked) {
-    setStatus("راهنماهای این مرحله تمام شد 🔒", "ok");
-    return;
+function resetHintsForNextWord() {
+  hintWordForLevel = "";
+  usedHint1 = usedHint2 = usedHint3 = false;
+  hintBtn1.disabled = false;
+  hintBtn2.disabled = false;
+  hintBtn3.disabled = false;
+}
+
+function ensureHintWord() {
+  if (!hintWordForLevel || foundWords.includes(hintWordForLevel)) {
+    hintWordForLevel = pickHintWord();
+    usedHint1 = usedHint2 = usedHint3 = false;
+    hintBtn1.disabled = false;
+    hintBtn2.disabled = false;
+    hintBtn3.disabled = false;
   }
+  return hintWordForLevel;
+}
 
-  // 2) کلمات باقی‌مانده
+function pickHintWord() {
+  const level = levels[currentLevelIndex];
   const remaining = level.answers
     .map(normalizeWord)
     .filter(a => !foundWords.includes(a));
 
-  if (remaining.length === 0) {
-    setStatus("همه کلمات رو پیدا کردی 🌟", "ok");
+  if (remaining.length === 0) return "";
+  return remaining[Math.floor(Math.random() * remaining.length)];
+}
+
+function resetHintsForNextWord() {
+  hintWordForLevel = "";
+  usedHint1 = usedHint2 = usedHint3 = false;
+
+  hintBtn1.disabled = false;
+  hintBtn2.disabled = false;
+  hintBtn3.disabled = false;
+}
+
+function ensureHintWord() {
+  if (!hintWordForLevel || foundWords.includes(hintWordForLevel)) {
+    hintWordForLevel = pickHintWord();
+    usedHint1 = usedHint2 = usedHint3 = false;
+
+    hintBtn1.disabled = false;
+    hintBtn2.disabled = false;
+    hintBtn3.disabled = false;
+  }
+  return hintWordForLevel;
+}
+
+function applyHint(cost, msg, btn, flagSetter) {
+  if (score < cost) {
+    setStatus("امتیاز کافی نداری 😕", "bad");
     return;
   }
 
-  // 3) یک کلمه ثابت برای این مرحله انتخاب کن (تا راهنمای ۱ و ۲ روی یک کلمه باشن)
-  if (!hintWordForLevel) {
-    hintWordForLevel = remaining[Math.floor(Math.random() * remaining.length)];
-  }
+  score -= cost;
+  scoreTextEl.textContent = String(score);
 
-  // اگر آن کلمه پیدا شد، یکی دیگر انتخاب کن
-  if (foundWords.includes(hintWordForLevel)) {
-    hintWordForLevel = remaining[Math.floor(Math.random() * remaining.length)];
-  }
+  setStatus(msg, "ok");
+  flagSetter();
+  btn.disabled = true;
 
-  // 4) راهنمای ۱: فقط حرف اول (هزینه کمتر)
-  if (hintStage === 0) {
-    const cost1 = 5;
+  saveGameState();
+}
 
-    // اگر امتیاز کافی نیست
-    if (score < cost1) {
-      setStatus("امتیاز کافی نداری 😅", "bad");
-      return;
-    }
-
-    score -= cost1;
-    scoreTextEl.textContent = String(score);
-
-    const msg = `راهنما ۱: با «${hintWordForLevel[0]}» شروع می‌شود.`;
-    setStatus(msg, "ok");
-
-    hintStage = 1;
-    saveGameState?.();
+/* ===== راهنما ۱: یک حرف ===== */
+hintBtn1.addEventListener("click", () => {
+  if (usedHint1) {
+    setStatus("این راهنما قبلاً استفاده شده 🔒", "bad");
     return;
   }
 
-  // 5) راهنمای ۲: تعداد حروف (هزینه بیشتر) + قفل
-  if (hintStage === 1) {
-    const cost2 = 12;
-
-    if (score < cost2) {
-      setStatus("امتیاز کافی نداری 😅", "bad");
-      return;
-    }
-
-    score -= cost2;
-    scoreTextEl.textContent = String(score);
-
-    const msg = `راهنما ۲: ${hintWordForLevel.length} حرفی است.`;
-    setStatus(msg, "ok");
-
-    hintStage = 2;
-    hintLocked = true;               // 🔒 قفل
-    hintBtn.disabled = true;
-    hintBtn.textContent = "راهنما 🔒";
-
-    saveGameState?.();
+  const w = ensureHintWord();
+  if (!w) {
+    setStatus("همه کلمات پیدا شده 🎉", "ok");
     return;
   }
+
+  applyHint(
+    5,
+    `راهنما: یک حرف → «${w[0]}»`,
+    hintBtn1,
+    () => (usedHint1 = true)
+  );
 });
+
+/* ===== راهنما ۲: دو حرف ===== */
+hintBtn2.addEventListener("click", () => {
+  if (usedHint2) {
+    setStatus("این راهنما قبلاً استفاده شده 🔒", "bad");
+    return;
+  }
+
+  const w = ensureHintWord();
+  if (!w) {
+    setStatus("همه کلمات پیدا شده 🎉", "ok");
+    return;
+  }
+
+  const a = w[0];
+  const b = w.length >= 2 ? w[1] : "";
+
+  applyHint(
+    15,
+    `راهنما: دو حرف → «${a}${b}»`,
+    hintBtn2,
+    () => (usedHint2 = true)
+  );
+});
+
+/* ===== راهنما ۳: تعداد حروف ===== */
+hintBtn3.addEventListener("click", () => {
+  if (usedHint3) {
+    setStatus("این راهنما قبلاً استفاده شده 🔒", "bad");
+    return;
+  }
+
+  const w = ensureHintWord();
+  if (!w) {
+    setStatus("همه کلمات پیدا شده 🎉", "ok");
+    return;
+  }
+
+  applyHint(
+    15,
+    `راهنما: تعداد حروف → ${w.length}`,
+    hintBtn3,
+    () => (usedHint3 = true)
+  );
+});
+
+  
   nextBtn.addEventListener("click", () => {
     // صدای «مرحله بعد» + ویس مربوطه
     playSafe(soundLevelUp);
@@ -2143,29 +2286,43 @@ hintBtn.addEventListener("click", () => {
     );
   });
 
-  // دکمه مود زمان‌دار / عادی
-  modeToggleBtn.addEventListener("click", () => {
-    if (modeLocked) {
-      playSafe(soundClick);
-      setStatus("در هر مرحله فقط قبل از ثبت اولین کلمه می‌تونی مود زمان‌دار را تغییر بدهی.", "err");
-      setTavita("error", "این مرحله شروع شده؛ برای مرحله‌های بعدی از اول تصمیم بگیر زمان‌دار باشه یا نه 😉");
-      return;
-    }
+  // دکمه حالت زمان‌دار / عادی
+modeToggleBtn.addEventListener("click", () => {
+
+  // اگر در این مرحله یکبار استفاده شده، دیگه قفل
+  if (timedUsedThisLevel) {
     playSafe(soundClick);
-    if (gameMode === "normal") {
-      gameMode = "timed";
-      modeToggleBtn.textContent = "⏱️ مود زمان‌دار";
-      if (modeHint) modeHint.classList.add("hidden");
-      startLevelTimer();
-      playSafe(voiceModeOn);
-    } else {
-      gameMode = "normal";
-      modeToggleBtn.textContent = "🎮 مود عادی";
-      clearTimer();
-      if (modeHint) modeHint.classList.remove("hidden");
-    }
-    saveGameState();
-  });
+    setStatus("حالت زمان‌دار در هر مرحله فقط یک‌بار قابل استفاده است 🔒", "err");
+    setTavita("error", "این مرحله یک‌بار زمان‌دار شده؛ برای مرحله بعد دوباره انتخابش کن 😉");
+    return;
+  }
+
+  // اگر مرحله با ثبت کلمه شروع شده، اجازه تغییر نده
+  if (modeLocked) {
+    playSafe(soundClick);
+    setStatus("بعد از شروع مرحله نمی‌تونی حالت رو تغییر بدی 🔒", "err");
+    setTavita("error", "برای مرحله‌های بعدی قبل از ثبت کلمه تصمیم بگیر 😉");
+    return;
+  }
+
+  // روشن کردن زمان‌دار (فقط همین)
+  playSafe(soundClick);
+  gameMode = "timed";
+  timedUsedThisLevel = true;
+  timedLockStarted = true;
+
+  // از همین لحظه قفل بشه که نتونه وسط تایمر خاموش/روشن کنه
+  modeLocked = true;
+  modeToggleBtn.disabled = true;
+
+  modeToggleBtn.textContent = "⏱️ حالت زمان‌دار";
+  if (modeHint) modeHint.classList.add("hidden");
+
+  startLevelTimer();
+  playSafe(voiceModeOn);
+
+  saveGameState();
+});
 
   // خلاصه پیشرفت
 summaryBtn.addEventListener("click", () => {
