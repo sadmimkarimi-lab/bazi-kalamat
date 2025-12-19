@@ -1795,19 +1795,32 @@ function hidePopup() {
   }
 
   function handleTimeOver() {
-    missionHadMistake = true;
-    breakComboOnError();
-    if (score >= 10) {
-      score -= 10;
-      scoreTextEl.textContent = score.toString();
-    }
-    foundWords = [];
-    renderFoundWords();
-    setStatus("زمان تموم شد! این مرحله از اول شروع شد ⏱️", "err");
-    setTavita("error", "اوه، زمان تموم شد! بیا یک بار دیگه از اول این مرحله رو بزنیم 😉");
-    playSafe(voiceTimeUp);
-    saveGameState();
+  // تایمر رو کامل جمع کن
+  clearTimer();
+  timeLeft = 0;
+  updateTimerLabel();
+
+  // صدای تایمر قطع بشه
+  if (soundTimer) {
+    try {
+      soundTimer.pause();
+      soundTimer.currentTime = 0;
+    } catch (e) {}
   }
+
+  // ✅ کلمات پیدا شده رو نگه دار (هیچ ریستی نکن)
+  renderFoundWords();
+
+  // پیام‌ها
+  setStatus("⏳ زمان تموم شد! کلماتت محفوظ موند ✅", "err");
+  setTavita("error", "وقتت تموم شد… ولی هرچی پیدا کردی می‌مونه 👌");
+
+  // (اختیاری) صدا
+  playSafe(voiceTimeUp);
+
+  // نکته مهم: اینجا نباید initLevel(true) یا foundWords=[] یا هر reset ای باشه
+  saveGameState();
+}
 
   function startLevelTimer() {
     clearTimer();
