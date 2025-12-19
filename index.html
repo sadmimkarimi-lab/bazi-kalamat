@@ -1186,6 +1186,10 @@
   let isMuted = false;
   let playerName = "";
 
+  let hintStage = 0;         // 0=هیچ، 1=راهنما اول، 2=راهنما دوم
+let hintLocked = false;    // بعد از راهنما دوم قفل میشه
+let hintWordForLevel = ""; // کلمه‌ای که راهنما روی همون میچرخه
+
   // مود بازی و تایمر
   let gameMode = "normal";
   let timerId = null;
@@ -1843,6 +1847,14 @@ function hidePopup() {
     }
 
     saveGameState();
+
+
+hintStage = 0;
+hintLocked = false;
+hintWordForLevel = "";
+hintBtn.disabled = false;
+hintBtn.textContent = "راهنما";
+    
   }
 
   function canBuildFromBase(base, word) {
@@ -1992,34 +2004,80 @@ function hidePopup() {
     setTavita("shuffle", "حروف را جابه‌جا کردم، شاید ایدهٔ جدیدی به ذهنت برسد ✨");
   });
 
-  hintBtn.addEventListener("click", () => {
-    const level = levels[currentLevelIndex];
-    const remaining = level.answers
-      .map(normalizeWord)
-      .filter((a) => !foundWords.includes(a));
+hintBtn.addEventListener("click", () => {
+  const level = levels[currentLevelIndex];
 
-    if (remaining.length === 0) {
-      setStatus("همهٔ کلمات این مرحله را پیدا کردی؛ برو مرحله بعدی 🌟", "ok");
-      setTavita("neutral", "این مرحله رو کامل ترکوندی؛ برو بعدی ببینیم چی کار می‌کنی 😎");
+  // 1) اگر قفل شده: فقط پیام بده، امتیاز کم نکن
+  if (hintLocked) {
+    setStatus("راهنماهای این مرحله تمام شد 🔒", "ok");
+    return;
+  }
+
+  // 2) کلمات باقی‌مانده
+  const remaining = level.answers
+    .map(normalizeWord)
+    .filter(a => !foundWords.includes(a));
+
+  if (remaining.length === 0) {
+    setStatus("همه کلمات رو پیدا کردی 🌟", "ok");
+    return;
+  }
+
+  // 3) یک کلمه ثابت برای این مرحله انتخاب کن (تا راهنمای ۱ و ۲ روی یک کلمه باشن)
+  if (!hintWordForLevel) {
+    hintWordForLevel = remaining[Math.floor(Math.random() * remaining.length)];
+  }
+
+  // اگر آن کلمه پیدا شد، یکی دیگر انتخاب کن
+  if (foundWords.includes(hintWordForLevel)) {
+    hintWordForLevel = remaining[Math.floor(Math.random() * remaining.length)];
+  }
+
+  // 4) راهنمای ۱: فقط حرف اول (هزینه کمتر)
+  if (hintStage === 0) {
+    const cost1 = 5;
+
+    // اگر امتیاز کافی نیست
+    if (score < cost1) {
+      setStatus("امتیاز کافی نداری 😅", "bad");
       return;
     }
 
-    score = Math.max(0, score - 5);
-    scoreTextEl.textContent = score.toString();
+    score -= cost1;
+    scoreTextEl.textContent = String(score);
 
-    const hintWord = remaining[Math.floor(Math.random() * remaining.length)];
-    let hintMsg = "";
-    if (hintWord.length >= 4) {
-      hintMsg = `راهنما: یکی از کلمات این مرحله ${hintWord.length} حرفی است و با «${hintWord[0]}» شروع می‌شود.`;
-    } else {
-      hintMsg = `راهنما: یکی از کلمات این مرحله با «${hintWord[0]}» شروع می‌شود.`;
+    const msg = `راهنما ۱: با «${hintWordForLevel[0]}» شروع می‌شود.`;
+    setStatus(msg, "ok");
+
+    hintStage = 1;
+    saveGameState?.();
+    return;
+  }
+
+  // 5) راهنمای ۲: تعداد حروف (هزینه بیشتر) + قفل
+  if (hintStage === 1) {
+    const cost2 = 12;
+
+    if (score < cost2) {
+      setStatus("امتیاز کافی نداری 😅", "bad");
+      return;
     }
-    setStatus(hintMsg, "ok");
-    setTavita("neutral", hintMsg + "<br>حالا خودت ادامه‌ش رو برو 😌✨");
-    playSafe(soundClick);
-    saveGameState();
-  });
 
+    score -= cost2;
+    scoreTextEl.textContent = String(score);
+
+    const msg = `راهنما ۲: ${hintWordForLevel.length} حرفی است.`;
+    setStatus(msg, "ok");
+
+    hintStage = 2;
+    hintLocked = true;               // 🔒 قفل
+    hintBtn.disabled = true;
+    hintBtn.textContent = "راهنما 🔒";
+
+    saveGameState?.();
+    return;
+  }
+});
   nextBtn.addEventListener("click", () => {
     // صدای «مرحله بعد» + ویس مربوطه
     playSafe(soundLevelUp);
