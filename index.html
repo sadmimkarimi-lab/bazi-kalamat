@@ -5,9 +5,21 @@
   <title>بازی کلمات طاویتا</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/yekan-bakh-font@v1.0.0/dist/font-face.css" rel="stylesheet" />
-
   <style>
+
+@font-face {
+  font-family: "Yekan";
+  src: url("https://cdnfa.com/irangiah/a9be/uploads/bazi/yekan.woff2") format("woff2"),
+       url("https://cdnfa.com/irangiah/a9be/uploads/bazi/yekan.woff") format("woff"),
+       url("https://cdnfa.com/irangiah/a9be/uploads/bazi/yekan.ttf") format("truetype"),
+       url("https://cdnfa.com/irangiah/a9be/uploads/bazi/yekan.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+    
     :root {
       --purple-main: #8b5cf6;
       --purple-dark: #6d28d9;
@@ -23,12 +35,12 @@
     html, body { height: 100%; }
 
     body {
-      font-family: "YekanBakh", system-ui, sans-serif;
-      background: radial-gradient(circle at top, #e0f2fe 0, #f5f3ff 45%, #e5e7eb 100%);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-    }
+  font-family: "Yekan", system-ui, sans-serif;
+  background: radial-gradient(circle at top, #e0f2fe 0%, #f5f3ff 45%, #e5e7eb 100%);
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+}
 
     .app {
       width: 100%;
