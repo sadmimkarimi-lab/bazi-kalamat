@@ -806,6 +806,17 @@ button {
   text-align:center;
 }
 
+
+.wordgame-ad{
+  width: 100%;
+  max-width: 720px;
+  display: block;
+  margin: 12px auto 0;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+}
+    
     
   </style>
 <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
@@ -973,6 +984,15 @@ button {
         </button>
       </div>
 
+<!-- بنر تبلیغ زیر دکمه‌ها -->
+<img
+  src="https://cdnfa.com/irangiah/a9be/uploads/ads/tankads.webp"
+  class="wordgame-ad"
+  alt="تبلیغ"
+  onclick="openAdLink()"
+/>
+
+      
 <div class="hint-box">
   <button id="hintBtn1" class="hint-btn" type="button">
     <span class="icon">💡</span>
@@ -1120,6 +1140,19 @@ button {
 
 <script>
   // ست‌های کاراکتر بر اساس رَنک + عکس جابه‌جایی
+ 
+  const AD_IMAGE = "https://cdnfa.com/irangiah/a9be/uploads/ads/tankads.webp";
+const AD_LINK  = "https://eitaa.com/tavita_ads";
+
+function openAdLink() {
+  if (window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.openEitaaLink) {
+    window.Eitaa.WebApp.openEitaaLink(AD_LINK);
+  } else {
+    window.location.href = AD_LINK;
+  }
+}
+  
+  
   const TAVITA_SETS = {
     student: {
       explain: "https://cdnfa.com/irangiah/a9be/uploads/bazi/picsart-25-11-16-05-11-48-385.webp",
